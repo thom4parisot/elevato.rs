@@ -32,63 +32,71 @@
     </style>
     
     <script src="https://rawgithub.com/Wolfy87/EventEmitter/master/EventEmitter.js"></script>
+    <script> // https://github.com/cujojs/when#legacy-environments
+    window.define = function(factory) {
+        try{ delete window.define; } catch(e){ window.define = void 0; } // IE
+        window.when = factory();
+    };
+    window.define.amd = {};
+    </script>
+    <script src="https://rawgithub.com/cujojs/when/master/when.js"></script>
 
     <script>
       function Elevator(el){
-        // private
-         this.el = el;
-        this.currentFloor = 1; // "first floor" as they say in English
+          EventEmitter.call(this);
+          
+          // private
+          this.el = el;
+          this.currentFloor = 1; // "first floor" as they say in English
         
-         this.requests = [];
+          this.requests = [];
       }
       
       Elevator.prototype = Object.create(EventEmitter.prototype);
       
       Elevator.prototype.goToFloor = function(n){
+          var def = when.defer();
           var b = parseInt(window.getComputedStyle(this.el).bottom);
           
-          console.log(b);
           this.el.style.bottom = ((n-1)*105 + 10) + 'px'; // hardcoding :-( related to CSS height & margin
-          console.log(this.el.style.bottom);
+          
+          setInterval(function(){
+              def.resolve();          
+          }, Math.abs(this.currentFloor - n)*500);
+          
+          return def.promise;
       }
         
       Elevator.prototype.requestFloor = function(n){
-        this.requests.push(n);
+          this.emit('floorRequest', n);
       }
       
-      
-      
-      // should emit an 'idle' event.
       // on idle, if pending requests, pick on and act on it (or more complex logic)
       // emit 'floorRequest' events
-      
+      // emit an 'idle' event?
     </script>
+      
+      
     <script>
+        function floorRequestsScenario(e){
+            // Floor requests scenario
+            setTimeout(function(){ e.requestFloor(2); }, 1000);
+            setTimeout(function(){ e.requestFloor(3); }, 2000);
+            setTimeout(function(){ e.requestFloor(1); }, 3000);
+        };
+        
+        function elevatorStrategy(e){
+            e.on('floorRequest', function(floor){
+                e.goToFloor(floor);
+            });
+        }
+        
         document.addEventListener('DOMContentLoaded', function(){
-            
-          var elevator = new Elevator(document.getElementsByClassName('elevator')[0]);
+            var elevator = new Elevator(document.getElementsByClassName('elevator')[0]);
         
-        
-          setTimeout(function(){
-            elevator.requestFloor(1);
-            elevator.goToFloor(1);
-            
-            setTimeout(function(){
-              elevator.requestFloor(3);
-              elevator.goToFloor(3);
-                
-                setTimeout(function(){
-                  elevator.requestFloor(1);
-                  elevator.goToFloor(1);
-                    
-                }, 1000);
-                
-            }, 1000);
-            
-          }, 1000);
+            elevatorStrategy(elevator);
+            floorRequestsScenario(elevator);
         });
-      
-      
     </script>
 
     <title> See you later elevator </title>    
