@@ -27,6 +27,9 @@
             height: 80px;
             background-color: #647;
             color: #DDD;  
+            
+            transition-timing-function: ease;
+            transition-property: bottom;
         }
         
     </style>
@@ -59,6 +62,7 @@
           var b = parseInt(window.getComputedStyle(this.el).bottom);
           
           this.el.style.bottom = ((n-1)*105 + 10) + 'px'; // hardcoding :-( related to CSS height & margin
+          this.el.style.transitionDuration = "1s"; // TODO make depend on floor difference
           
           setInterval(function(){
               def.resolve();          
@@ -86,6 +90,7 @@
         };
         
         function elevatorStrategy(e){
+            
             e.on('floorRequest', function(floor){
                 e.goToFloor(floor);
             });
