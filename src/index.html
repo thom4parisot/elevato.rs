@@ -2,13 +2,20 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <style type="text/css" src="http://necolas.github.io/normalize.css/2.1.3/normalize.css"></style>
+    <link rel="stylesheet" type="text/css" href="http://necolas.github.io/normalize.css/2.1.3/normalize.css">
+    <link rel="stylesheet" type="text/css" href="https://rawgithub.com/marijnh/CodeMirror/master/lib/codemirror.css">
+    <link rel="stylesheet" type="text/css" href="https://rawgithub.com/marijnh/CodeMirror/master/theme/solarized.css">
     <style>
-        *{
-          box-sizing: border-box;
+        .column {
+          display: inline-block;
+          width: 50%;
         }
         .building{
             position: relative;
+        }
+
+        .building *{
+          box-sizing: border-box;
         }
 
         .floor, .elevator {
@@ -39,7 +46,6 @@
             transition-property: bottom;
         }
     </style>
-
     <script src="https://rawgithub.com/Wolfy87/EventEmitter/master/EventEmitter.js"></script>
     <script> // https://github.com/cujojs/when#legacy-environments
     window.define = function(factory) {
@@ -48,6 +54,8 @@
     };
     window.define.amd = {};
     </script>
+    <script src="https://rawgithub.com/marijnh/CodeMirror/master/lib/codemirror.js"></script>
+    <script src="https://rawgithub.com/marijnh/CodeMirror/master/mode/javascript/javascript.js"></script>
     <script src="https://rawgithub.com/cujojs/when/master/when.js"></script>
     <script>
       function Elevator(el){
@@ -109,36 +117,36 @@
 
 
     <script>
-        function floorRequestsScenario(e){
-            // Floor requests scenario
-            setTimeout(function(){ e.up(); }, 1000);
-            setTimeout(function(){ e.up(); }, 2000);
-            setTimeout(function(){ e.up(); }, 3000);
-            setTimeout(function(){ e.up(); }, 4000);
-            setTimeout(function(){ e.requestGroundFloor(); }, 6000);
-        }
+      function floorRequestsScenario(e){
+        // Floor requests scenario
+        setTimeout(function(){ e.up(); }, 1000);
+        setTimeout(function(){ e.up(); }, 2000);
+        setTimeout(function(){ e.up(); }, 3000);
+        setTimeout(function(){ e.up(); }, 4000);
+        setTimeout(function(){ e.requestGroundFloor(); }, 6000);
+      }
 
-        function elevatorStrategy(e){
+function elevatorStrategy (e) {
 
-            e.on('floorRequest', function(floor){
-                e.goToFloor(floor);
-            });
-        }
+  e.on('floorRequest', function (floor) {
+    e.goToFloor(floor);
+  });
 
-        document.addEventListener('DOMContentLoaded', function(){
-            var elevator = new Elevator(document.getElementsByClassName('elevator')[0]);
+}
 
-            elevatorStrategy(elevator);
-            floorRequestsScenario(elevator);
-        });
+      document.addEventListener('DOMContentLoaded', function(){
+        var elevator = new Elevator(document.getElementsByClassName('elevator')[0]);
+
+        elevatorStrategy(elevator);
+        floorRequestsScenario(elevator);
+      });
     </script>
 
     <title> See you later elevator </title>
   </head>
 
   <body>
-
-      <div class="building">
+      <div class="building column">
         <dl class="shaft">
           <dt class="elevator" data-at-floor="1">Elevator</dt>
           <dd class="floor" data-level="4"></dd>
@@ -146,7 +154,22 @@
           <dd class="floor" data-level="2"></dd>
           <dd class="floor" data-level="1"></dd>
         </dl>
+      </div><div class="column">
+        <textarea id="editor" cols="30" rows="10"></textarea>
       </div>
 
+      <script type="text/javascript">
+        (function(d){
+          var editor = document.getElementById('editor');
+          editor.innerHTML = elevatorStrategy.toString();
+
+          var strategyEditor = CodeMirror.fromTextArea(editor, {
+            mode: {name: "javascript", json: true},
+            lineNumbers: true,
+            autofocus: true,
+            theme: "solarized dark"
+          });
+        })(document);
+      </script>
   </body>
 </html>
