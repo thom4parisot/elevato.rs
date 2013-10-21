@@ -121,10 +121,9 @@
 <script id="evaluated-scripts">
 function floorRequestsScenario(e){
   // Floor requests scenario
-  setTimeout(function(){ e.up(); }, 1000);
-  setTimeout(function(){ e.up(); }, 2000);
+  setTimeout(function(){ e.up(); }, 1500);
   setTimeout(function(){ e.up(); }, 3000);
-  setTimeout(function(){ e.up(); }, 4000);
+  setTimeout(function(){ e.up(); }, 4500);
   setTimeout(function(){ e.requestGroundFloor(); }, 6000);
 }
 
@@ -167,6 +166,7 @@ function elevatorStrategy (e) {
           (elvtrs || elevators).forEach(function(config){
             var elevator = config.elevator;
 
+            elevator.requestGroundFloor();
             elevator.removeAllListeners('floorRequest');
             config.strategy(elevator);
             config.scenario(elevator);
