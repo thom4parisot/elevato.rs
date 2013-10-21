@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <style> 
+        *{
+            box-sizing: border-box;
+        }
+        
+        .building{
+            position: relative;
+        }
+        
+        .floor{
+            width: 100px;
+            height: 100px;
+            background-color: #874;
+            margin: 5px;
+        }
+        
+        .elevator{
+            position: absolute;
+            bottom: 10px;
+            left: 15px;
+            width: 80px;
+            height: 80px;
+            background-color: #647;
+            color: #DDD;  
+        }
+        
+    </style>
+    
+    <script src="https://rawgithub.com/Wolfy87/EventEmitter/master/EventEmitter.js"></script>
+
+    <script>
+      function Elevator(el){
+        // private
+         this.el = el;
+        this.currentFloor = 1; // "first floor" as they say in English
+        
+         this.requests = [];
+      }
+      
+      Elevator.prototype = Object.create(EventEmitter.prototype);
+      
+      Elevator.prototype.goToFloor = function(n){
+          var b = parseInt(window.getComputedStyle(this.el).bottom);
+          
+          console.log(b);
+          this.el.style.bottom = ((n-1)*105 + 10) + 'px'; // hardcoding :-( related to CSS height & margin
+          console.log(this.el.style.bottom);
+      }
+        
+      Elevator.prototype.requestFloor = function(n){
+        this.requests.push(n);
+      }
+      
+      
+      
+      // should emit an 'idle' event.
+      // on idle, if pending requests, pick on and act on it (or more complex logic)
+      // emit 'floorRequest' events
+      
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            
+          var elevator = new Elevator(document.getElementsByClassName('elevator')[0]);
+        
+        
+          setTimeout(function(){
+            elevator.requestFloor(1);
+            elevator.goToFloor(1);
+            
+            setTimeout(function(){
+              elevator.requestFloor(3);
+              elevator.goToFloor(3);
+                
+                setTimeout(function(){
+                  elevator.requestFloor(1);
+                  elevator.goToFloor(1);
+                    
+                }, 1000);
+                
+            }, 1000);
+            
+          }, 1000);
+        });
+      
+      
+    </script>
+
+    <title> See you later elevator </title>    
+  </head>
+
+  <body>
+      
+      <div class="building">
+        <div class="elevator"> Elevator </div>
+        <div class="floor">4</div>
+        <div class="floor">3</div>
+        <div class="floor">2</div>
+        <div class="floor">1</div>
+      </div>
+      
+  </body>
+</html>
