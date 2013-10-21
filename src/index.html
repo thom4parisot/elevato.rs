@@ -102,14 +102,6 @@
         this.requestFloor(1);
       };
 
-      Elevator.prototype.up = function(){
-        this.requestFloor(this.currentFloor + 1);
-      };
-
-      Elevator.prototype.down = function(){
-        this.requestFloor(this.currentFloor - 1);
-      };
-
       // on idle, if pending requests, pick on and act on it (or more complex logic)
       // emit 'floorRequest' events
       // emit an 'idle' event?
@@ -121,9 +113,9 @@
 <script id="evaluated-scripts">
 function floorRequestsScenario(e){
   // Floor requests scenario
-  setTimeout(function(){ e.up(); }, 1500);
-  setTimeout(function(){ e.up(); }, 3000);
-  setTimeout(function(){ e.up(); }, 4500);
+  setTimeout(function(){ e.requestFloor(2); }, 1500);
+  setTimeout(function(){ e.requestFloor(3); }, 3000);
+  setTimeout(function(){ e.requestFloor(4); }, 4500);
   setTimeout(function(){ e.requestGroundFloor(); }, 6000);
 }
 
