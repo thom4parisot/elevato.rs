@@ -8,6 +8,7 @@
     <style>
         .column {
           display: inline-block;
+          vertical-align: top;
           width: 50%;
         }
         .building{
@@ -47,7 +48,8 @@
         }
     </style>
     <script src="https://rawgithub.com/Wolfy87/EventEmitter/master/EventEmitter.js"></script>
-    <script> // https://github.com/cujojs/when#legacy-environments
+    <script>
+    // https://github.com/cujojs/when#legacy-environments
     window.define = function(factory) {
         try{ delete window.define; } catch(e){ window.define = void 0; } // IE
         window.when = factory();
@@ -116,15 +118,15 @@
     </script>
 
 
-    <script>
-      function floorRequestsScenario(e){
-        // Floor requests scenario
-        setTimeout(function(){ e.up(); }, 1000);
-        setTimeout(function(){ e.up(); }, 2000);
-        setTimeout(function(){ e.up(); }, 3000);
-        setTimeout(function(){ e.up(); }, 4000);
-        setTimeout(function(){ e.requestGroundFloor(); }, 6000);
-      }
+<script id="evaluated-scripts">
+function floorRequestsScenario(e){
+  // Floor requests scenario
+  setTimeout(function(){ e.up(); }, 1000);
+  setTimeout(function(){ e.up(); }, 2000);
+  setTimeout(function(){ e.up(); }, 3000);
+  setTimeout(function(){ e.up(); }, 4000);
+  setTimeout(function(){ e.requestGroundFloor(); }, 6000);
+}
 
 function elevatorStrategy (e) {
 
@@ -133,14 +135,7 @@ function elevatorStrategy (e) {
   });
 
 }
-
-      document.addEventListener('DOMContentLoaded', function(){
-        var elevator = new Elevator(document.getElementsByClassName('elevator')[0]);
-
-        elevatorStrategy(elevator);
-        floorRequestsScenario(elevator);
-      });
-    </script>
+</script>
 
     <title> See you later elevator </title>
   </head>
@@ -155,19 +150,47 @@ function elevatorStrategy (e) {
           <dd class="floor" data-level="1"></dd>
         </dl>
       </div><div class="column">
+        <button id="run-code">Run Code</button>
         <textarea id="editor" cols="30" rows="10"></textarea>
       </div>
 
       <script type="text/javascript">
+        var elevators = [].slice.call(document.querySelectorAll('.shaft')).map(function(shaft){
+          return {
+            elevator: new Elevator(shaft.querySelector('.elevator')),
+            strategy: elevatorStrategy,
+            scenario: floorRequestsScenario
+          };
+        });
+
+        function runScenarios(elvtrs){
+          (elvtrs || elevators).forEach(function(config){
+            var elevator = config.elevator;
+
+            elevator.removeAllListeners('floorRequest');
+            config.strategy(elevator);
+            config.scenario(elevator);
+          });
+        };
+      </script>
+
+      <script type="text/javascript">
         (function(d){
-          var editor = document.getElementById('editor');
-          editor.innerHTML = elevatorStrategy.toString();
+          var editor = d.getElementById('editor');
+          editor.innerHTML = d.getElementById('evaluated-scripts').innerHTML;
 
           var strategyEditor = CodeMirror.fromTextArea(editor, {
             mode: {name: "javascript", json: true},
             lineNumbers: true,
             autofocus: true,
             theme: "solarized dark"
+          });
+
+          strategyEditor.setSize('100%', '100%');
+
+          d.getElementById('run-code').addEventListener('click', function(){
+            eval(strategyEditor.getValue());
+            runScenarios(elevators);
           });
         })(document);
       </script>
