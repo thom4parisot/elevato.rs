@@ -21,7 +21,10 @@ module.exports = function(grunt){
 
     'gh-pages': {
       github: {
-        src: ['**/*'],
+        src: [
+          '**/*',
+          '.gitignore'
+        ],
         options: {
           base: 'dist/'
         }
