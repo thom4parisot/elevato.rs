@@ -10,6 +10,12 @@ module.exports = function(grunt){
           'bower_components/**/*.{css,js}'
         ],
         dest: 'dist/'
+      },
+      trick: {
+        expand: true,
+        flatten: true,
+        src: 'src/.gitignore',
+        dest: 'dist'
       }
     },
 
