@@ -2,13 +2,21 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <style type="text/css" src="http://necolas.github.io/normalize.css/2.1.3/normalize.css"></style>
+    <link rel="stylesheet" type="text/css" href="http://necolas.github.io/normalize.css/2.1.3/normalize.css">
+    <link rel="stylesheet" type="text/css" href="https://rawgithub.com/marijnh/CodeMirror/master/lib/codemirror.css">
+    <link rel="stylesheet" type="text/css" href="https://rawgithub.com/marijnh/CodeMirror/master/theme/solarized.css">
     <style>
-        *{
-          box-sizing: border-box;
+        .column {
+          display: inline-block;
+          vertical-align: top;
+          width: 50%;
         }
         .building{
             position: relative;
+        }
+
+        .building *{
+          box-sizing: border-box;
         }
 
         .floor, .elevator {
@@ -33,21 +41,23 @@
             height: 80px;
             background-color: #647;
             color: #DDD;
-            margin: 0 15px;
+            margin: 15px;
 
             transition-timing-function: ease;
             transition-property: bottom;
         }
     </style>
-
     <script src="https://rawgithub.com/Wolfy87/EventEmitter/master/EventEmitter.js"></script>
-    <script> // https://github.com/cujojs/when#legacy-environments
+    <script>
+    // https://github.com/cujojs/when#legacy-environments
     window.define = function(factory) {
         try{ delete window.define; } catch(e){ window.define = void 0; } // IE
         window.when = factory();
     };
     window.define.amd = {};
     </script>
+    <script src="https://rawgithub.com/marijnh/CodeMirror/master/lib/codemirror.js"></script>
+    <script src="https://rawgithub.com/marijnh/CodeMirror/master/mode/javascript/javascript.js"></script>
     <script src="https://rawgithub.com/cujojs/when/master/when.js"></script>
     <script>
       function Elevator(el){
@@ -92,14 +102,6 @@
         this.requestFloor(1);
       };
 
-      Elevator.prototype.up = function(){
-        this.requestFloor(this.currentFloor + 1);
-      };
-
-      Elevator.prototype.down = function(){
-        this.requestFloor(this.currentFloor - 1);
-      };
-
       // on idle, if pending requests, pick on and act on it (or more complex logic)
       // emit 'floorRequest' events
       // emit an 'idle' event?
@@ -108,37 +110,29 @@
     </script>
 
 
-    <script>
-        function floorRequestsScenario(e){
-            // Floor requests scenario
-            setTimeout(function(){ e.up(); }, 1000);
-            setTimeout(function(){ e.up(); }, 2000);
-            setTimeout(function(){ e.up(); }, 3000);
-            setTimeout(function(){ e.up(); }, 4000);
-            setTimeout(function(){ e.requestGroundFloor(); }, 6000);
-        }
+<script id="evaluated-scripts">
+function floorRequestsScenario(e){
+  // Floor requests scenario
+  setTimeout(function(){ e.requestFloor(2); }, 1500);
+  setTimeout(function(){ e.requestFloor(3); }, 3000);
+  setTimeout(function(){ e.requestFloor(4); }, 4500);
+  setTimeout(function(){ e.requestGroundFloor(); }, 6000);
+}
 
-        function elevatorStrategy(e){
+function elevatorStrategy (e) {
 
-            e.on('floorRequest', function(floor){
-                e.goToFloor(floor);
-            });
-        }
+  e.on('floorRequest', function (floor) {
+    e.goToFloor(floor);
+  });
 
-        document.addEventListener('DOMContentLoaded', function(){
-            var elevator = new Elevator(document.getElementsByClassName('elevator')[0]);
-
-            elevatorStrategy(elevator);
-            floorRequestsScenario(elevator);
-        });
-    </script>
+}
+</script>
 
     <title> See you later elevator </title>
   </head>
 
   <body>
-
-      <div class="building">
+      <div class="building column">
         <dl class="shaft">
           <dt class="elevator" data-at-floor="1">Elevator</dt>
           <dd class="floor" data-level="4"></dd>
@@ -146,7 +140,51 @@
           <dd class="floor" data-level="2"></dd>
           <dd class="floor" data-level="1"></dd>
         </dl>
+      </div><div class="column">
+        <button id="run-code">Run Code</button>
+        <textarea id="editor" cols="30" rows="10"></textarea>
       </div>
 
+      <script type="text/javascript">
+        var elevators = [].slice.call(document.querySelectorAll('.shaft')).map(function(shaft){
+          return {
+            elevator: new Elevator(shaft.querySelector('.elevator')),
+            strategy: elevatorStrategy,
+            scenario: floorRequestsScenario
+          };
+        });
+
+        function runScenarios(elvtrs){
+          (elvtrs || elevators).forEach(function(config){
+            var elevator = config.elevator;
+
+            elevator.requestGroundFloor();
+            elevator.removeAllListeners('floorRequest');
+            config.strategy(elevator);
+            config.scenario(elevator);
+          });
+        };
+      </script>
+
+      <script type="text/javascript">
+        (function(d){
+          var editor = d.getElementById('editor');
+          editor.innerHTML = d.getElementById('evaluated-scripts').innerHTML;
+
+          var strategyEditor = CodeMirror.fromTextArea(editor, {
+            mode: {name: "javascript", json: true},
+            lineNumbers: true,
+            autofocus: true,
+            theme: "solarized dark"
+          });
+
+          strategyEditor.setSize('100%', '100%');
+
+          d.getElementById('run-code').addEventListener('click', function(){
+            eval(strategyEditor.getValue());
+            runScenarios(elevators);
+          });
+        })(document);
+      </script>
   </body>
 </html>
