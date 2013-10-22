@@ -2,15 +2,22 @@
 
 module.exports = function(grunt){
   grunt.initConfig({
-    'gh-pages': {
-      github: {
+    'copy': {
+      'static': {
         src: [
           'index.html',
           'src/**/*',
-          'bower_components/**/*.{js,css}'
+          'bower_components/**/*.{css,js}'
         ],
+        dest: 'dist/'
+      }
+    },
+
+    'gh-pages': {
+      github: {
+        src: ['**/*'],
         options: {
-          base: './'
+          base: 'dist/'
         }
       }
     },
@@ -22,8 +29,9 @@ module.exports = function(grunt){
     }
   });
 
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-gh-pages');
   grunt.loadNpmTasks('grunt-open');
 
-  grunt.registerTask('default', ['gh-pages', 'open']);
+  grunt.registerTask('default', ['copy', 'gh-pages', 'open']);
 };
