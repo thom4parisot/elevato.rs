@@ -1,11 +1,12 @@
 {
-  "name": "SeeYouLaterElevator",
+  "name": "seeyoulaterelevator",
   "version": "0.0.0",
-  "homepage": "https://github.com/oncletom/SeeYouLaterElevator",
+  "homepage": "https://github.com/DavidBruant/SeeYouLaterElevator",
   "authors": [
-    "Thomas Parisot <thomas.parisot@bbc.co.uk>"
+    "David Bruant <bruantd@gmail.com>",
+    "Thomas Parisot <thomas@oncle-tom.net>"
   ],
-  "license": "MIT",
+  "license": "Unlicense",
   "private": true,
   "ignore": [
     "**/.*",
