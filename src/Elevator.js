@@ -22,7 +22,7 @@
    */
   var Elevator = machina.Fsm.extend({
     initialState: "idle",
-    el: "",
+    el: null,
     goingToFloor: 1,
     previousFloor: 1,
     initialize: function(){
@@ -46,8 +46,11 @@
           this.transition('moving');
           this.goingToFloor = floor_number;
 
-          var b = parseInt(window.getComputedStyle(this.el).bottom, 10);
-          this.el.style.bottom = ((floor_number - 1)*105 + 10) + 'px'; // hardcoding :-( related to CSS height & margin
+          //maybe inserting back the moving strategy around here, from the event
+          this.emit('moving', { to: this.goingToFloor, from: this.previousFloor });
+
+          // hardcoding :-( related to CSS height & margin
+          this.el.style.bottom = ((floor_number - 1)*105 + 10) + 'px';
           this.el.style.transitionDuration = Math.abs(floor_number - this.previousFloor)+"s";
           this.el.setAttribute('data-at-floor', floor_number);
         }
@@ -76,6 +79,7 @@
     },
     /**
      * Public API used to drag an elevator to a certain level
+     *
      * @api
      * @param floor_number
      * @returns {*}

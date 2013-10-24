@@ -97,9 +97,15 @@
             document.addEventListener('DOMContentLoaded', function(){
 
               elevators = [].slice.call(document.querySelectorAll('.shaft .elevator')).map(function(el){
-                return new Elevator({
+                var e = new Elevator({
                   el: el
                 });
+
+                e.on('moving', function(e){
+                  //do something when the elevator is about to move
+                });
+
+                return e;
               });
 
               //Object.freeze(elevators);
