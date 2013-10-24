@@ -11,15 +11,21 @@
           vertical-align: top;
           width: 45%;
         }
-        
+
         .building{
             position: relative;
             left: 100px;
         }
 
         .building * {
-            box-sizing: border-box;
-            -moz-box-sizing: border-box;
+          -webkit-box-sizing: border-box;
+          -moz-box-sizing: border-box;
+          box-sizing: border-box;
+        }
+
+        .shaft {
+          display: inline-block;
+          position: relative;
         }
 
         .floor, .elevator {
@@ -48,13 +54,13 @@
             transition-timing-function: ease;
             transition-property: bottom;
         }
-        
+
         .elevator:nth-of-type(2){
             left: -60px;
-            
+
         }
-        
-        
+
+
         #run-code{
             position: relative;
             top: 50px;
@@ -185,6 +191,26 @@ function elevatorStrategy (elevators) {
       <div class="building column">
         <dl class="shaft">
           <dt class="elevator" data-at-floor="1">Elevator</dt>
+          <dd class="floor" data-level="4"></dd>
+          <dd class="floor" data-level="3"></dd>
+          <dd class="floor" data-level="2"></dd>
+          <dd class="floor" data-level="1"></dd>
+        </dl>
+        <dl class="shaft">
+          <dt class="elevator" data-at-floor="1">Elevator</dt>
+          <dd class="floor" data-level="4"></dd>
+          <dd class="floor" data-level="3"></dd>
+          <dd class="floor" data-level="2"></dd>
+          <dd class="floor" data-level="1"></dd>
+        </dl>
+        <dl class="shaft">
+          <dt class="elevator" data-at-floor="1">Elevator</dt>
+          <dd class="floor" data-level="4"></dd>
+          <dd class="floor" data-level="3"></dd>
+          <dd class="floor" data-level="2"></dd>
+          <dd class="floor" data-level="1"></dd>
+        </dl>
+        <dl class="shaft">
           <dt class="elevator" data-at-floor="1">Elevator</dt>
           <dd class="floor" data-level="4"></dd>
           <dd class="floor" data-level="3"></dd>
@@ -216,7 +242,6 @@ function elevatorStrategy (elevators) {
           strategyEditor.setSize('100%', '100%');
 
           d.getElementById('run-code').addEventListener('click', function(){
-              console.log('click run code')
               eval(strategyEditor.getValue());
               runScenarios(elevators);
           });
