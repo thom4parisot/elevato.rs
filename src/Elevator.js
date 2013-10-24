@@ -3,7 +3,12 @@
 
   function amimationEnd(e){
     this.requestsStack.shift();
-    console.log('animationend', this.requestsStack);
+
+    this.transition('unloading');
+  }
+
+  function queuedNotice(){
+    console.log('Already moving. Request put on hold.')
   }
 
   var Elevator = machina.Fsm.extend({
@@ -14,17 +19,15 @@
     initialize: function(){
       var self = this;
 
-      //we do it here otherwhise the stack is shared among the various elevators (and we don't want it)
+      //we do it here otherwise the stack is shared among the various elevators (and we don't want it)
       this.requestsStack = [];
 
-      console.log(this.requestsStack)
       this.el.addEventListener('animationend', amimationEnd.bind(this));
       this.el.addEventListener('webkitTransitionEnd', amimationEnd.bind(this));
     },
     states: {
       'idle': {
         'move': function(floor_number){
-          this.requestsStack.push(floor_number);
           this.transition('moving');
 
           var b = parseInt(window.getComputedStyle(this.el).bottom, 10);
@@ -34,12 +37,23 @@
         }
       },
       'moving': {
-        'move': function(floor_number){
-          this.requestsStack.push(floor_number);
-        }
+        'move': queuedNotice
+      },
+      'unloading': {
+        _onEnter: function(){
+          this.transition('idle');
+
+          if (!this.requestsStack.length){
+            return;
+          }
+
+          this.handle('move', this.requestsStack[0]);
+        },
+        'move': queuedNotice
       }
     },
     goToFloor: function(floor_number){
+      this.requestsStack.push(floor_number);
       this.handle('move', floor_number);
 
       return this;
