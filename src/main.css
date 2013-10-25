@@ -30,7 +30,7 @@
   width: 100px;
 }
 .floor:before{
-  content: attr(data-level);
+  content: '.goToFloor(' attr(data-level) ')';
   margin: 3px;
 }
 
@@ -42,6 +42,9 @@
   margin: 0;
   width: 96px;
   height: 96px;
+  line-height: 96px;
+  vertical-align: middle;
+  text-align: center;
   background-color: #647;
   color: #DDD;
 
@@ -51,6 +54,12 @@
   -ms-transition-timing-function: cubic-bezier(0.925, 0.165, 0.260, 0.960);
   -o-transition-timing-function: cubic-bezier(0.925, 0.165, 0.260, 0.960);
   transition-timing-function: cubic-bezier(0.925, 0.165, 0.260, 0.960); /* custom */
+}
+
+.elevator,
+.floor:before{
+  font-family: monospace;
+  font-size: 0.9em;
 }
 
 #run-code{

@@ -26,8 +26,12 @@
   strategyEditor.setSize('100%', '100%');
 
   d.getElementById('run-code').addEventListener('click', function(){
-    eval(strategyEditor.getValue());
+    var functions = eval(new Function(strategyEditor.getValue() + '; return { onFloorRequest: onFloorRequest, onElevatorIdle: onElevatorIdle }'))();
 
-    runAllScenarios(context.elevators);
+    Object.keys(functions).forEach(function(functionName){
+      context[functionName] = functions[functionName];
+    });
+
+    runAllScenarios();
   });
 })(document, window);
