@@ -1,0 +1,24 @@
+{
+  "name": "seeyoulaterelevator",
+  "version": "0.0.0",
+  "homepage": "https://github.com/DavidBruant/SeeYouLaterElevator",
+  "authors": [
+    "David Bruant <bruant.d@gmail.com>",
+    "Thomas Parisot <thomas@oncle-tom.net>"
+  ],
+  "license": "Unlicense",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "normalize-css": "~2.1.3",
+    "codemirror": "~3.19.0",
+    "when": "~2.5.1",
+    "eventEmitter": "Wolfy87/EventEmitter#~4.2.4"
+  }
+}
