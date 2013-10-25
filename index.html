@@ -56,15 +56,20 @@
       </div>
 
 <script id="evaluated-scripts">
-function onElevatorRequest(elevator, otherElevators) {
+function chaipuquoi(elevators){
+  // etat commun
+  
+  elevators.on('floorRequest', floor => {
+  
+  })
+  
+  elevators.forEach(e => {
+    e.on('floorRequest', floor => {
+      
+    })
+  
+  })
 
-  // do something when an elevator is asked to reach a certain floor
-
-}
-
-function onElevatorIdle(elevator, otherElevators) {
-  log(elevator.requestsStack)
-  // do something when an elevator becomes idle
 }
 </script>
 
