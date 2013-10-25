@@ -5,138 +5,7 @@
     <link rel="stylesheet" type="text/css" href="bower_components/normalize-css/normalize.css">
     <link rel="stylesheet" type="text/css" href="bower_components/codemirror/lib/codemirror.css">
     <link rel="stylesheet" type="text/css" href="bower_components/codemirror/theme/solarized.css">
-    <style>
-        .column {
-          display: inline-block;
-          vertical-align: top;
-          width: 45%;
-        }
-
-        .building{
-            position: relative;
-            left: 100px;
-        }
-
-        .building * {
-          -webkit-box-sizing: border-box;
-          -moz-box-sizing: border-box;
-          box-sizing: border-box;
-        }
-
-        .shaft {
-          display: inline-block;
-          position: relative;
-        }
-
-        .floor, .elevator {
-          margin: 5px 0;
-        }
-
-        .floor{
-          background-color: #874;
-          height: 100px;
-          width: 100px;
-        }
-          .floor:before{
-            content: attr(data-level);
-          }
-
-        .elevator{
-            padding: 10px;
-            position: absolute;
-            bottom: 10px;
-            left: 60px;
-            width: 90px;
-            height: 90px;
-            background-color: #647;
-            color: #DDD;
-
-            /* @see http://matthewlein.com/ceaser/ */
-            -webkit-transition-timing-function: cubic-bezier(0.650, 0.045, 0.320, 1); /* older webkit */
-            -webkit-transition-timing-function: cubic-bezier(0.650, 0.045, 0.320, 1.040);
-            -moz-transition-timing-function: cubic-bezier(0.650, 0.045, 0.320, 1.040);
-            -ms-transition-timing-function: cubic-bezier(0.650, 0.045, 0.320, 1.040);
-            -o-transition-timing-function: cubic-bezier(0.650, 0.045, 0.320, 1.040);
-            transition-timing-function: cubic-bezier(0.650, 0.045, 0.320, 1.040); /* custom */
-        }
-
-        .elevator:nth-of-type(2){
-            left: -60px;
-        }
-
-
-        #run-code{
-            position: relative;
-            top: 50px;
-            width: 200px;
-            height: 100px;
-        }
-    </style>
-    <script src="bower_components/codemirror/lib/codemirror.js"></script>
-    <script src="bower_components/codemirror/mode/javascript/javascript.js"></script>
-    <script src="bower_components/lodash/dist/lodash.min.js"></script>
-    <script src="bower_components/machina/lib/machina.min.js"></script>
-    <script src="src/Elevator.js"></script>
-
-    <script>
-    function floorRequestsScenario(elevators){
-      var f = 0;
-      elevators[f++].goToFloor(2).goToFloor(3).goToFloor(4).goToFloor(1);
-      elevators[f++].goToFloor(3).goToFloor(4).goToFloor(3).goToFloor(1);
-      elevators[f++].goToFloor(4).goToFloor(3).goToFloor(2).goToFloor(1);
-      elevators[f++].goToFloor(4).goToFloor(1).goToFloor(4).goToFloor(1);
-    }
-    </script>
-
-    <script>
-      var elevators = {};
-
-      (function(global){
-            "use strict";
-
-            document.addEventListener('DOMContentLoaded', function(){
-
-              elevators = [].slice.call(document.querySelectorAll('.shaft .elevator')).map(function(el){
-                var e = new Elevator({
-                  el: el
-                });
-
-                e.on('moving', function(e){
-                  //do something when the elevator is about to move
-                });
-
-                return e;
-              });
-
-              //Object.freeze(elevators);
-            });
-
-            global.runScenarios = function runScenarios(elevators){
-                elevatorStrategy(elevators)
-
-                floorRequestsScenario(elevators);
-
-                if(typeof elevatorStrategy !== 'function')
-                    throw new Error('An "elevatorStrategy" function must be defined somewhere');
-
-            };
-
-      })(this);
-    </script>
-
-<!--
-Need to listen to floorRequests (indifferenciated of whether it comes from the inside or outside)
--->
-<script id="evaluated-scripts">
-function elevatorStrategy (elevators) {
-
-    /*elevators.on('floorRequest', function (floor) {
-        elevators[ Math.random() < 0.5 ? 0 : 1].goToFloor(floor);
-    });*/
-
-}
-</script>
-
+    <link rel="stylesheet" type="text/css" href="src/main.css">
     <title> See you later elevator </title>
   </head>
 
@@ -144,27 +13,32 @@ function elevatorStrategy (elevators) {
       <div class="building column">
         <dl class="shaft">
           <dt class="elevator" data-at-floor="1">Elevator</dt>
+          <dd class="floor" data-level="6"></dd>
+          <dd class="floor" data-level="5"></dd>
           <dd class="floor" data-level="4"></dd>
           <dd class="floor" data-level="3"></dd>
           <dd class="floor" data-level="2"></dd>
           <dd class="floor" data-level="1"></dd>
-        </dl>
-        <dl class="shaft">
+        </dl><dl class="shaft">
           <dt class="elevator" data-at-floor="1">Elevator</dt>
+          <dd class="floor" data-level="6"></dd>
+          <dd class="floor" data-level="5"></dd>
           <dd class="floor" data-level="4"></dd>
           <dd class="floor" data-level="3"></dd>
           <dd class="floor" data-level="2"></dd>
           <dd class="floor" data-level="1"></dd>
-        </dl>
-        <dl class="shaft">
+        </dl><dl class="shaft">
           <dt class="elevator" data-at-floor="1">Elevator</dt>
+          <dd class="floor" data-level="6"></dd>
+          <dd class="floor" data-level="5"></dd>
           <dd class="floor" data-level="4"></dd>
           <dd class="floor" data-level="3"></dd>
           <dd class="floor" data-level="2"></dd>
           <dd class="floor" data-level="1"></dd>
-        </dl>
-        <dl class="shaft">
+        </dl><dl class="shaft">
           <dt class="elevator" data-at-floor="1">Elevator</dt>
+          <dd class="floor" data-level="6"></dd>
+          <dd class="floor" data-level="5"></dd>
           <dd class="floor" data-level="4"></dd>
           <dd class="floor" data-level="3"></dd>
           <dd class="floor" data-level="2"></dd>
@@ -175,30 +49,33 @@ function elevatorStrategy (elevators) {
       <div class="column">
         <textarea id="editor" cols="30" rows="10"></textarea>
 
-        <button id="run-code">Run Code</button>
+        <div><button id="run-code">Run Code</button></div>
+
+        <div id="logs"><!-- :-)  --></div>
       </div>
 
+<script id="evaluated-scripts">
+function onElevatorRequest(elevator, otherElevators) {
 
+  // do something when an elevator is asked to reach a certain floor
 
-      <script type="text/javascript"> // CodeMirror
-        (function(d){
-          var editor = d.getElementById('editor');
-          editor.innerHTML = d.getElementById('evaluated-scripts').innerHTML;
+}
 
-          var strategyEditor = CodeMirror.fromTextArea(editor, {
-            mode: {name: "javascript", json: true},
-            lineNumbers: true,
-            autofocus: true,
-            theme: "solarized dark"
-          });
+function onElevatorIdle(elevator, otherElevators) {
+  log(elevator.requestsStack)
+  // do something when an elevator becomes idle
+}
+</script>
 
-          strategyEditor.setSize('100%', '100%');
+      <script src="bower_components/codemirror/lib/codemirror.js"></script>
+      <script src="bower_components/codemirror/mode/javascript/javascript.js"></script>
+      <script src="bower_components/lodash/dist/lodash.min.js"></script>
+      <script src="bower_components/machina/lib/machina.min.js"></script>
 
-          d.getElementById('run-code').addEventListener('click', function(){
-              eval(strategyEditor.getValue());
-              runScenarios(elevators);
-          });
-        })(document);
-      </script>
+      <script src="src/Elevator.js"></script>
+      <script src="src/scenarii.js"></script>
+      <script src="src/elevators.js"></script>
+
+      <script src="src/onload.js"></script>
   </body>
 </html>

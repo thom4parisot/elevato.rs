@@ -8,7 +8,6 @@
   }
 
   function queuedNotice(){
-    console.log('Already moving. Request put on hold.')
   }
 
   /**
@@ -41,18 +40,19 @@
       'idle': {
         _onEnter: function(){
           this.goingToFloor = null;
+          this.emit('idle', this);
         },
         'move': function(floor_number){
           this.transition('moving');
           this.goingToFloor = floor_number;
 
-          //maybe inserting back the moving strategy around here, from the event
-          this.emit('moving', { to: this.goingToFloor, from: this.previousFloor });
+          this.emit('moving', this);
 
+          // using this.goingToFloor because the event might change the direction
           // hardcoding :-( related to CSS height & margin
-          this.el.style.bottom = ((floor_number - 1)*105 + 10) + 'px';
-          this.el.style.transitionDuration = Math.abs(floor_number - this.previousFloor)+"s";
-          this.el.setAttribute('data-at-floor', floor_number);
+          this.el.style.bottom = ((this.goingToFloor - 1)*100 + 2) + 'px';
+          this.el.style.transitionDuration = Math.abs(this.goingToFloor - this.previousFloor)+"s";
+          this.el.setAttribute('data-at-floor', this.goingToFloor);
         }
       },
       /**
@@ -66,13 +66,17 @@
        */
       'unloading': {
         _onEnter: function(){
-          this.transition('idle');
+          var self = this;
 
-          if (!this.requestsStack.length){
-            return;
-          }
+          setTimeout(function(){
+            self.transition('idle');
 
-          this.handle('move', this.requestsStack[0]);
+            if (!self.requestsStack.length){
+              return;
+            }
+
+            self.handle('move', self.requestsStack[0]);
+          }, 1000);
         },
         'move': queuedNotice
       }
