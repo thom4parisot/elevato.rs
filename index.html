@@ -5,129 +5,8 @@
     <link rel="stylesheet" type="text/css" href="bower_components/normalize-css/normalize.css">
     <link rel="stylesheet" type="text/css" href="bower_components/codemirror/lib/codemirror.css">
     <link rel="stylesheet" type="text/css" href="bower_components/codemirror/theme/solarized.css">
-    <style>
-        .column {
-          display: inline-block;
-          vertical-align: top;
-          width: 50%;
-        }
-        .building{
-            position: relative;
-        }
-
-        .building *{
-          box-sizing: border-box;
-        }
-
-        .floor, .elevator {
-          margin: 5px;
-        }
-
-        .floor{
-          background-color: #874;
-          height: 100px;
-          width: 100px;
-        }
-          .floor:before{
-            content: attr(data-level);
-          }
-
-        .elevator{
-            padding: 10px;
-            position: absolute;
-            bottom: 10px;
-            left: 0;
-            width: 80px;
-            height: 80px;
-            background-color: #647;
-            color: #DDD;
-            margin: 15px;
-
-            transition-timing-function: ease;
-            transition-property: bottom;
-        }
-    </style>
-    <script src="bower_components/eventEmitter/EventEmitter.js"></script>
-    <script>
-    // https://github.com/cujojs/when#legacy-environments
-    window.define = function(factory) {
-        try{ delete window.define; } catch(e){ window.define = void 0; } // IE
-        window.when = factory();
-    };
-    window.define.amd = {};
-    </script>
-    <script src="bower_components/codemirror/lib/codemirror.js"></script>
-    <script src="bower_components/codemirror/mode/javascript/javascript.js"></script>
-    <script src="bower_components/when/when.js"></script>
-    <script>
-      function Elevator(el){
-          EventEmitter.call(this);
-
-          // private
-          this.el = el;
-          this.currentFloor = 1;  // "first floor" as they say in English
-          this.state = "ready";   // handling that as a state machine would be a great win
-          this.latency = 0;
-
-          this.requests = [];
-      }
-
-      Elevator.prototype = Object.create(EventEmitter.prototype);
-
-      Elevator.prototype.goToFloor = function(n){
-          var self = this;
-          var def = when.defer();
-          var b = parseInt(window.getComputedStyle(this.el).bottom);
-
-          this.el.style.bottom = ((n-1)*105 + 10) + 'px'; // hardcoding :-( related to CSS height & margin
-          this.el.style.transitionDuration = "1s"; // TODO make depend on floor difference
-
-          this.state = "moving";
-          this.el.setAttribute('data-at-floor', n);
-
-          setInterval(function(){
-              self.currentFloor = n;
-              self.state = "ready";
-              def.resolve();
-          }, self.latency);
-
-          return def.promise;
-      }
-
-      Elevator.prototype.requestFloor = function(n){
-          this.emit('floorRequest', n);
-      };
-
-      Elevator.prototype.requestGroundFloor = function(){
-        this.requestFloor(1);
-      };
-
-      // on idle, if pending requests, pick on and act on it (or more complex logic)
-      // emit 'floorRequest' events
-      // emit an 'idle' event?
-      // -> State Machine and transitioning states would address this questioning
-      // -> Stacking calls would be good too. (FIFO processing)
-    </script>
-
-
-<script id="evaluated-scripts">
-function floorRequestsScenario(e){
-  // Floor requests scenario
-  setTimeout(function(){ e.requestFloor(2); }, 1500);
-  setTimeout(function(){ e.requestFloor(3); }, 3000);
-  setTimeout(function(){ e.requestFloor(4); }, 4500);
-  setTimeout(function(){ e.requestGroundFloor(); }, 6000);
-}
-
-function elevatorStrategy (e) {
-
-  e.on('floorRequest', function (floor) {
-    e.goToFloor(floor);
-  });
-
-}
-</script>
-
+    <link rel="stylesheet" type="text/css" href="src/main.css">
+      
     <title> See you later elevator </title>
   </head>
 
@@ -135,56 +14,69 @@ function elevatorStrategy (e) {
       <div class="building column">
         <dl class="shaft">
           <dt class="elevator" data-at-floor="1">Elevator</dt>
+          <dd class="floor" data-level="6"></dd>
+          <dd class="floor" data-level="5"></dd>
+          <dd class="floor" data-level="4"></dd>
+          <dd class="floor" data-level="3"></dd>
+          <dd class="floor" data-level="2"></dd>
+          <dd class="floor" data-level="1"></dd>
+        </dl><dl class="shaft">
+          <dt class="elevator" data-at-floor="1">Elevator</dt>
+          <dd class="floor" data-level="6"></dd>
+          <dd class="floor" data-level="5"></dd>
+          <dd class="floor" data-level="4"></dd>
+          <dd class="floor" data-level="3"></dd>
+          <dd class="floor" data-level="2"></dd>
+          <dd class="floor" data-level="1"></dd>
+        </dl><dl class="shaft">
+          <dt class="elevator" data-at-floor="1">Elevator</dt>
+          <dd class="floor" data-level="6"></dd>
+          <dd class="floor" data-level="5"></dd>
+          <dd class="floor" data-level="4"></dd>
+          <dd class="floor" data-level="3"></dd>
+          <dd class="floor" data-level="2"></dd>
+          <dd class="floor" data-level="1"></dd>
+        </dl><dl class="shaft">
+          <dt class="elevator" data-at-floor="1">Elevator</dt>
+          <dd class="floor" data-level="6"></dd>
+          <dd class="floor" data-level="5"></dd>
           <dd class="floor" data-level="4"></dd>
           <dd class="floor" data-level="3"></dd>
           <dd class="floor" data-level="2"></dd>
           <dd class="floor" data-level="1"></dd>
         </dl>
-      </div><div class="column">
-        <button id="run-code">Run Code</button>
-        <textarea id="editor" cols="30" rows="10"></textarea>
       </div>
 
-      <script type="text/javascript">
-        var elevators = [].slice.call(document.querySelectorAll('.shaft')).map(function(shaft){
-          return {
-            elevator: new Elevator(shaft.querySelector('.elevator')),
-            strategy: elevatorStrategy,
-            scenario: floorRequestsScenario
-          };
-        });
+      <div class="column">
+        <textarea id="editor" cols="30" rows="10"></textarea>
 
-        function runScenarios(elvtrs){
-          (elvtrs || elevators).forEach(function(config){
-            var elevator = config.elevator;
+        <div><button id="run-code">Run Code</button></div>
 
-            elevator.requestGroundFloor();
-            elevator.removeAllListeners('floorRequest');
-            config.strategy(elevator);
-            config.scenario(elevator);
-          });
-        };
-      </script>
+        <div id="logs"><!-- :-)  --></div>
+      </div>
 
-      <script type="text/javascript">
-        (function(d){
-          var editor = d.getElementById('editor');
-          editor.innerHTML = d.getElementById('evaluated-scripts').innerHTML;
+<script id="evaluated-scripts">
+function onElevatorRequest(elevator, otherElevators) {
 
-          var strategyEditor = CodeMirror.fromTextArea(editor, {
-            mode: {name: "javascript", json: true},
-            lineNumbers: true,
-            autofocus: true,
-            theme: "solarized dark"
-          });
+  // do something when an elevator is asked to reach a certain floor
 
-          strategyEditor.setSize('100%', '100%');
+}
 
-          d.getElementById('run-code').addEventListener('click', function(){
-            eval(strategyEditor.getValue());
-            runScenarios(elevators);
-          });
-        })(document);
-      </script>
+function onElevatorIdle(elevator, otherElevators) {
+  log(elevator.requestsStack)
+  // do something when an elevator becomes idle
+}
+</script>
+
+      <script src="bower_components/codemirror/lib/codemirror.js"></script>
+      <script src="bower_components/codemirror/mode/javascript/javascript.js"></script>
+      <script src="bower_components/lodash/dist/lodash.min.js"></script>
+      <script src="bower_components/machina/lib/machina.min.js"></script>
+
+      <script src="src/Elevator.js"></script>
+      <script src="src/scenarii.js"></script>
+      <script src="src/elevators.js"></script>
+
+      <script src="src/onload.js"></script>
   </body>
 </html>

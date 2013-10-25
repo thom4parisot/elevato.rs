@@ -1,0 +1,86 @@
+.column {
+  display: inline-block;
+  vertical-align: top;
+  width: 50%;
+}
+
+.building{
+  background: green;
+  margin: 25px 50px;
+  width: auto;
+}
+
+.building * {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.shaft {
+  display: inline-block;
+  margin: 0;
+  position: relative;
+}
+
+.floor{
+  border: 2px solid white;
+  color: white;
+  height: 100px;
+  margin: 0;
+  width: 100px;
+}
+.floor:before{
+  content: attr(data-level);
+  margin: 3px;
+}
+
+.elevator{
+  padding: 0;
+  position: absolute;
+  bottom: 2px;
+  left: 2px;
+  margin: 0;
+  width: 96px;
+  height: 96px;
+  background-color: #647;
+  color: #DDD;
+
+  /* @see http://matthewlein.com/ceaser/ */
+  -webkit-transition-timing-function: cubic-bezier(0.650, 0.045, 0.320, 1); /* older webkit */
+  -webkit-transition-timing-function: cubic-bezier(0.650, 0.045, 0.320, 1.040);
+  -moz-transition-timing-function: cubic-bezier(0.650, 0.045, 0.320, 1.040);
+  -ms-transition-timing-function: cubic-bezier(0.650, 0.045, 0.320, 1.040);
+  -o-transition-timing-function: cubic-bezier(0.650, 0.045, 0.320, 1.040);
+  transition-timing-function: cubic-bezier(0.650, 0.045, 0.320, 1.040); /* custom */
+}
+
+.elevator:nth-of-type(2){
+  left: -60px;
+}
+
+
+#run-code{
+  cursor: pointer;
+  font-weight: bold;
+  width: 100%;
+  height: 100px;
+}
+
+#logs {
+  border: 1px solid black;
+  border-top: none;
+  padding: 5px;
+  font-family: monospace;
+
+  margin: 0;
+  overflow: scroll;
+
+  min-height: 200px;
+  max-height: 300px;
+}
+  #logs p{
+    margin-top: 0;
+  }
+  #logs p:before{
+    content: "» ";
+  }
