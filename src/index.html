@@ -11,15 +11,21 @@
           vertical-align: top;
           width: 45%;
         }
-        
+
         .building{
             position: relative;
             left: 100px;
         }
 
         .building * {
-            box-sizing: border-box;
-            -moz-box-sizing: border-box;
+          -webkit-box-sizing: border-box;
+          -moz-box-sizing: border-box;
+          box-sizing: border-box;
+        }
+
+        .shaft {
+          display: inline-block;
+          position: relative;
         }
 
         .floor, .elevator {
@@ -45,16 +51,20 @@
             background-color: #647;
             color: #DDD;
 
-            transition-timing-function: ease;
-            transition-property: bottom;
+            /* @see http://matthewlein.com/ceaser/ */
+            -webkit-transition-timing-function: cubic-bezier(0.650, 0.045, 0.320, 1); /* older webkit */
+            -webkit-transition-timing-function: cubic-bezier(0.650, 0.045, 0.320, 1.040);
+            -moz-transition-timing-function: cubic-bezier(0.650, 0.045, 0.320, 1.040);
+            -ms-transition-timing-function: cubic-bezier(0.650, 0.045, 0.320, 1.040);
+            -o-transition-timing-function: cubic-bezier(0.650, 0.045, 0.320, 1.040);
+            transition-timing-function: cubic-bezier(0.650, 0.045, 0.320, 1.040); /* custom */
         }
-        
+
         .elevator:nth-of-type(2){
             left: -60px;
-            
         }
-        
-        
+
+
         #run-code{
             position: relative;
             top: 50px;
@@ -62,118 +72,67 @@
             height: 100px;
         }
     </style>
-    <script src="https://rawgithub.com/Wolfy87/EventEmitter/master/EventEmitter.js"></script>
-      
-    <script>
-    // https://github.com/cujojs/when#legacy-environments
-    window.define = function(factory) {
-        try{ delete window.define; } catch(e){ window.define = void 0; } // IE
-        window.when = factory();
-    };
-    window.define.amd = {};
-    </script>
-    <script src="https://rawgithub.com/cujojs/when/master/when.js"></script>
-      
     <script src="https://rawgithub.com/marijnh/CodeMirror/master/lib/codemirror.js"></script>
     <script src="https://rawgithub.com/marijnh/CodeMirror/master/mode/javascript/javascript.js"></script>
-    
+    <script src="../bower_components/lodash/dist/lodash.min.js"></script>
+    <script src="../bower_components/machina/lib/machina.min.js"></script>
+    <script src="Elevator.js"></script>
+
     <script>
-      function Elevator(el){
-          EventEmitter.call(this);
-
-          // private
-          this.el = el;
-          this.currentFloor = 1;  // "first floor" as they say in English
-          this.state = "ready";   // handling that as a state machine would be a great win
-          this.latency = 0;
-
-          this.requests = [];
-      }
-
-      Elevator.prototype = Object.create(EventEmitter.prototype);
-
-      Elevator.prototype.goToFloor = function(n){
-          var self = this;
-          var def = when.defer();
-          var b = parseInt(window.getComputedStyle(this.el).bottom);
-
-          this.el.style.bottom = ((n-1)*105 + 10) + 'px'; // hardcoding :-( related to CSS height & margin
-          this.el.style.transitionDuration = "1s"; // TODO make depend on floor difference
-
-          this.state = "moving";
-          this.el.setAttribute('data-at-floor', n);
-
-          // Maybe listen to animationEnd? 
-          setTimeout(function(){
-              self.currentFloor = n;
-              self.state = "ready";
-              def.resolve();
-          }, self.latency);
-
-          return def.promise;
-      }
-      
-
-      // on idle, if pending requests, pick on and act on it (or more complex logic)
-      // emit 'floorRequest' events
-      // emit an 'idle' event?
-      // -> State Machine and transitioning states would address this questioning
-      // -> Stacking calls would be good too. (FIFO processing)
+    function floorRequestsScenario(elevators){
+      var f = 0;
+      elevators[f++].goToFloor(2).goToFloor(3).goToFloor(4).goToFloor(1);
+      elevators[f++].goToFloor(3).goToFloor(4).goToFloor(3).goToFloor(1);
+      elevators[f++].goToFloor(4).goToFloor(3).goToFloor(2).goToFloor(1);
+      elevators[f++].goToFloor(4).goToFloor(1).goToFloor(4).goToFloor(1);
+    }
     </script>
 
-      <script>
-      function floorRequestsScenario(e){
-          // Floor requests scenario
-          setTimeout(function(){ e.emit('floorRequest', 2); }, 500);
-          setTimeout(function(){ e.emit('floorRequest', 3); }, 2000);
-          setTimeout(function(){ e.emit('floorRequest', 4); }, 3500);
-          setTimeout(function(){ e.emit('floorRequest', 1); }, 5000);
-      }
-      </script>
-      
-      <script>
-          var elevators;
-          
-        (function(global){
-              "use strict";
-              
-              document.addEventListener('DOMContentLoaded', function(){
-                  elevators = Object.create(EventEmitter.prototype); // this is fucking dumb -_-$
-                  EventEmitter.call(elevators);
-                  
-                  var els = [].slice.call(document.querySelectorAll('.shaft .elevator'))
-                  els.forEach(function(el, i){ // this is a consequence of the fucking dumb thing above -_-$
-                      elevators[i] = new Elevator(el);
-                  });
-                  elevators.length = els.length;
-                  //Object.freeze(elevators);
+    <script>
+      var elevators = {};
+
+      (function(global){
+            "use strict";
+
+            document.addEventListener('DOMContentLoaded', function(){
+
+              elevators = [].slice.call(document.querySelectorAll('.shaft .elevator')).map(function(el){
+                var e = new Elevator({
+                  el: el
+                });
+
+                e.on('moving', function(e){
+                  //do something when the elevator is about to move
+                });
+
+                return e;
               });
-            
-              global.runScenarios = function runScenarios(elevators){
-                  // cleanup from previous runs
-                  elevators.removeAllListeners('floorRequest');
-                  
-                  elevatorStrategy(elevators)
-                  
-                  floorRequestsScenario(elevators);
-                  
-                  if(typeof elevatorStrategy !== 'function')
-                      throw new Error('An "elevatorStrategy" function must be defined somewhere');
-                  
-              };
-        
-        })(this);
-      </script>
-      
+
+              //Object.freeze(elevators);
+            });
+
+            global.runScenarios = function runScenarios(elevators){
+                elevatorStrategy(elevators)
+
+                floorRequestsScenario(elevators);
+
+                if(typeof elevatorStrategy !== 'function')
+                    throw new Error('An "elevatorStrategy" function must be defined somewhere');
+
+            };
+
+      })(this);
+    </script>
+
 <!--
 Need to listen to floorRequests (indifferenciated of whether it comes from the inside or outside)
 -->
 <script id="evaluated-scripts">
 function elevatorStrategy (elevators) {
 
-    elevators.on('floorRequest', function (floor) {
+    /*elevators.on('floorRequest', function (floor) {
         elevators[ Math.random() < 0.5 ? 0 : 1].goToFloor(floor);
-    });
+    });*/
 
 }
 </script>
@@ -185,6 +144,26 @@ function elevatorStrategy (elevators) {
       <div class="building column">
         <dl class="shaft">
           <dt class="elevator" data-at-floor="1">Elevator</dt>
+          <dd class="floor" data-level="4"></dd>
+          <dd class="floor" data-level="3"></dd>
+          <dd class="floor" data-level="2"></dd>
+          <dd class="floor" data-level="1"></dd>
+        </dl>
+        <dl class="shaft">
+          <dt class="elevator" data-at-floor="1">Elevator</dt>
+          <dd class="floor" data-level="4"></dd>
+          <dd class="floor" data-level="3"></dd>
+          <dd class="floor" data-level="2"></dd>
+          <dd class="floor" data-level="1"></dd>
+        </dl>
+        <dl class="shaft">
+          <dt class="elevator" data-at-floor="1">Elevator</dt>
+          <dd class="floor" data-level="4"></dd>
+          <dd class="floor" data-level="3"></dd>
+          <dd class="floor" data-level="2"></dd>
+          <dd class="floor" data-level="1"></dd>
+        </dl>
+        <dl class="shaft">
           <dt class="elevator" data-at-floor="1">Elevator</dt>
           <dd class="floor" data-level="4"></dd>
           <dd class="floor" data-level="3"></dd>
@@ -192,14 +171,14 @@ function elevatorStrategy (elevators) {
           <dd class="floor" data-level="1"></dd>
         </dl>
       </div>
-      
+
       <div class="column">
         <textarea id="editor" cols="30" rows="10"></textarea>
-      
+
         <button id="run-code">Run Code</button>
       </div>
-      
-      
+
+
 
       <script type="text/javascript"> // CodeMirror
         (function(d){
@@ -216,7 +195,6 @@ function elevatorStrategy (elevators) {
           strategyEditor.setSize('100%', '100%');
 
           d.getElementById('run-code').addEventListener('click', function(){
-              console.log('click run code')
               eval(strategyEditor.getValue());
               runScenarios(elevators);
           });
