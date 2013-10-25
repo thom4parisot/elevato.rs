@@ -68,10 +68,11 @@
 
 #logs {
   border: 1px solid black;
+  border-top: none;
   padding: 5px;
   font-family: monospace;
 
-  margin: 15px 0;
+  margin: 0;
   overflow: scroll;
 
   min-height: 200px;
