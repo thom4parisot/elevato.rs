@@ -46,18 +46,12 @@
   color: #DDD;
 
   /* @see http://matthewlein.com/ceaser/ */
-  -webkit-transition-timing-function: cubic-bezier(0.650, 0.045, 0.320, 1); /* older webkit */
-  -webkit-transition-timing-function: cubic-bezier(0.650, 0.045, 0.320, 1.040);
-  -moz-transition-timing-function: cubic-bezier(0.650, 0.045, 0.320, 1.040);
-  -ms-transition-timing-function: cubic-bezier(0.650, 0.045, 0.320, 1.040);
-  -o-transition-timing-function: cubic-bezier(0.650, 0.045, 0.320, 1.040);
-  transition-timing-function: cubic-bezier(0.650, 0.045, 0.320, 1.040); /* custom */
+  -webkit-transition-timing-function: cubic-bezier(0.925, 0.165, 0.260, 0.960);
+  -moz-transition-timing-function: cubic-bezier(0.925, 0.165, 0.260, 0.960);
+  -ms-transition-timing-function: cubic-bezier(0.925, 0.165, 0.260, 0.960);
+  -o-transition-timing-function: cubic-bezier(0.925, 0.165, 0.260, 0.960);
+  transition-timing-function: cubic-bezier(0.925, 0.165, 0.260, 0.960); /* custom */
 }
-
-.elevator:nth-of-type(2){
-  left: -60px;
-}
-
 
 #run-code{
   cursor: pointer;
