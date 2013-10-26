@@ -53,8 +53,10 @@
 
           // using this.goingToFloor because the event might change the direction
           // hardcoding :-( related to CSS height & margin
+          var floorDiff = Math.abs(this.goingToFloor - this.previousFloor);
+
           this.el.style.bottom = ((this.goingToFloor - 1)*100 + 2) + 'px';
-          this.el.style.transitionDuration = Math.abs(this.goingToFloor - this.previousFloor)+"s";
+          this.el.style.transitionDuration = (floorDiff - (0.1*floorDiff))+"s";
           this.el.setAttribute('data-at-floor', this.goingToFloor);
         }
       },
