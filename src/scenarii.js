@@ -2,18 +2,14 @@ function requestFloor(floorNumber){
   onFloorRequest(floorNumber, elevators);
 }
 
-function runBasicScenario(){
-  [2, 4, 3, 2, 5, 6, 2, 4, 1, 3].forEach(requestFloor);
-}
-
-function runAllScenarios(){
+function runScenario(level){
   if(typeof onFloorRequest !== 'function')
     throw new Error('An "onFloorRequest" function must be defined somewhere');
 
   if(typeof onElevatorIdle !== 'function')
     throw new Error('An "onElevatorIdle" function must be defined somewhere');
 
-  runBasicScenario(elevators);
+  scenarii[level-1].scenario(elevators);
 }
 
 
@@ -31,7 +27,7 @@ function runAllScenarios(){
 * Level 6 - Three elevators, ten floors, random
 * Level 7 - Four elevators, ten floors, lots of requests
 */
-/*var scenarii = [
+var scenarii = [
   // Introduction levels
   {
     elevators: 1,
@@ -40,6 +36,7 @@ function runAllScenarios(){
       setTimeout(function(){ requestFloor(2); }, 0);
     }
   },
+
   {
     elevators: 1,
     floors: 3,
@@ -52,6 +49,7 @@ function runAllScenarios(){
       setTimeout(function(){ requestFloor(1); }, 1500);
     }
   },
+
   {
     elevators: 2,
     floors: 5,
@@ -218,7 +216,7 @@ function runAllScenarios(){
       setTimeout(function(){ requestFloor(3); }, 19000);
       setTimeout(function(){ requestFloor(2); }, 19500);
       setTimeout(function(){ requestFloor(1); }, 20000);
+    }
   }
 
-
-];*/
+];

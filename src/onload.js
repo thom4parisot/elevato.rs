@@ -38,6 +38,7 @@
 
   d.getElementById('run-code').addEventListener('click', function(){
     var code = strategyEditor.getValue();
+    var level = d.getElementById('level').value;
     localStorage.previousCode = code;
     var functions = eval(new Function(code + '; return { onFloorRequest: onFloorRequest, onElevatorIdle: onElevatorIdle }'))();
 
@@ -45,6 +46,8 @@
       context[functionName] = functions[functionName];
     });
 
-    runAllScenarios();
+    if (level){
+      runScenario(level);
+    }
   });
 })(document, window);
