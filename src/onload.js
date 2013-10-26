@@ -104,6 +104,6 @@
   prepare(level);
 
   if (level.value && hasToRun()){
-    runScenario(level.value);
+    window['checkIfScenarioIsComplete'] = runScenario(level.value);
   }
 })(document, window);

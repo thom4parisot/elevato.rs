@@ -10,17 +10,6 @@ function setFloorState(floorNumber, state){
   });
 }
 
-function checkIfScenarioIsComplete(elevators){
-  var allIdle = elevators.some(function(elevator){
-    return elevator.state === "idle";
-  });
-
-  if (allIdle){
-    log("All elevators are now idle");
-    document.body.setAttribute('data-state', document.querySelectorAll('.floor[data-state="waiting"]').length ? 'failure' : 'success');
-  }
-}
-
 function runScenario(level){
   var functions = eval(new Function(localStorage.previousCode + '; return { onFloorRequest: onFloorRequest, onElevatorIdle: onElevatorIdle }'))();
 
@@ -34,7 +23,23 @@ function runScenario(level){
   if(typeof onElevatorIdle !== 'function')
     throw new Error('An "onElevatorIdle" function must be defined somewhere');
 
+  var start = Date.now();
+
   scenarii[level-1].scenario(elevators);
+
+  return (function(start){
+    return function checkIfScenarioIsComplete(elevators){
+      var allIdle = elevators.some(function(elevator){
+        return elevator.state === "idle";
+      });
+
+      if (allIdle){
+        document.body.setAttribute('data-state', document.querySelectorAll('.floor[data-state="waiting"]').length ? 'failure' : 'success');
+        log("All elevators are now idle");
+        log('Scenario', level, 'complete in', (Date.now()-start-1000) / 1000, 'seconds.');
+      }
+    }
+  })(start);
 }
 
 
