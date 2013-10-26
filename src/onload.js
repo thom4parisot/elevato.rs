@@ -39,10 +39,28 @@
   /*
    Selecting level
    */
-  d.getElementById('level').addEventListener('change', function(e){
+  var level = d.getElementById('level');
+  level.addEventListener('change', function(e){
     log('Changed to scenario', this.value);
 
-    var scenario = scenarii[this.value - 1];
+    prepare(this);
+  });
+
+  function prepagePage(){
+    context.location.href.match(/level=(\d+)/);
+    var levelValue = RegExp.$1 || "";
+
+    if (levelValue){
+      level.value = levelValue;
+    }
+  }
+
+  function prepare(levelElement){
+    var scenario = scenarii[levelElement.value - 1];
+
+    if (!scenario){
+      return;
+    }
 
     [].slice.call(d.querySelectorAll('[data-level]')).forEach(function(floor){
       if (floor.getAttribute('data-level') > scenario.floors){
@@ -61,28 +79,31 @@
         shaft.classList.remove('hidden');
       }
     });
+  }
 
-    [].slice.call(d.querySelectorAll('.elevator')).forEach(function(elevator){
-      elevator.removeAttribute('style');
-      elevator.setAttribute('data-at-floor', 1);
-    });
-  });
+  function hasToRun(){
+    return !!context.location.href.match('&run');
+  }
 
   /*
-   Running scenario
+   Running scenario on click
    */
   d.getElementById('run-code').addEventListener('click', function(){
     var code = strategyEditor.getValue();
     var level = d.getElementById('level').value;
+
     localStorage.previousCode = code;
-    var functions = eval(new Function(code + '; return { onFloorRequest: onFloorRequest, onElevatorIdle: onElevatorIdle }'))();
 
-    Object.keys(functions).forEach(function(functionName){
-      context[functionName] = functions[functionName];
-    });
-
-    if (level){
-      runScenario(level);
-    }
+    context.location.href = '?level='+level+'&run';
   });
+
+  /*
+  On page load
+   */
+  prepagePage();
+  prepare(level);
+
+  if (level.value && hasToRun()){
+    runScenario(level.value);
+  }
 })(document, window);

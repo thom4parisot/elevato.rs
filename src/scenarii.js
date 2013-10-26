@@ -4,6 +4,12 @@ function requestFloor(floorNumber){
 }
 
 function runScenario(level){
+  var functions = eval(new Function(localStorage.previousCode + '; return { onFloorRequest: onFloorRequest, onElevatorIdle: onElevatorIdle }'))();
+
+  Object.keys(functions).forEach(function(functionName){
+    window[functionName] = functions[functionName];
+  });
+
   if(typeof onFloorRequest !== 'function')
     throw new Error('An "onFloorRequest" function must be defined somewhere');
 
