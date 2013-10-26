@@ -8,7 +8,7 @@
     });
 
     e.on('moving', function (event) {
-      context.onElevatorRequest(e, context.elevators)
+      context.onFloorRequest(e, context.elevators)
     });
 
     e.on('idle', function (event) {

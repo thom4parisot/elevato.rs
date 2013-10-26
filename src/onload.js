@@ -64,19 +64,19 @@
 
     [].slice.call(d.querySelectorAll('[data-level]')).forEach(function(floor){
       if (floor.getAttribute('data-level') > scenario.floors){
-        floor.classList.add('hidden');
+        floor.setAttribute('hidden', true);
       }
       else{
-        floor.classList.remove('hidden');
+        floor.removeAttribute('hidden');
       }
     });
 
     [].slice.call(d.querySelectorAll('.shaft')).forEach(function(shaft, i){
       if (parseInt(i, 10) >= scenario.elevators){
-        shaft.classList.add('hidden');
+        shaft.setAttribute('hidden', true);
       }
       else{
-        shaft.classList.remove('hidden');
+        shaft.removeAttribute('hidden');
       }
     });
   }
