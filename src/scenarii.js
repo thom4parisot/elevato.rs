@@ -1,6 +1,25 @@
 function requestFloor(floorNumber){
   log('Elevator request at floor', floorNumber);
+  setFloorState(floorNumber, 'waiting');
   onFloorRequest(floorNumber, elevators);
+}
+
+function setFloorState(floorNumber, state){
+  [].slice.call(document.querySelectorAll('.floor[data-level="'+floorNumber+'"]')).forEach(function(floor){
+    floor.setAttribute('data-state', state);
+  });
+}
+
+function checkIfScenarioIsComplete(elevators){
+  var allIdle = elevators.some(function(elevator){
+    log(elevator.state);
+    return elevator.state === "idle";
+  });
+
+  if (allIdle){
+    log("All elevators are now idle");
+    document.body.setAttribute('data-state', document.querySelectorAll('.floor[data-state="waiting"]').length ? 'failure' : 'success');
+  }
 }
 
 function runScenario(level){

@@ -39,8 +39,11 @@
        */
       'idle': {
         _onEnter: function(){
+          if (!this.requestsStack.length){
+            this.emit('idle', this.goingToFloor, this);
+          }
+
           this.goingToFloor = null;
-          this.emit('idle', this);
         },
         'move': function(floor_number){
           this.transition('moving');
@@ -69,13 +72,13 @@
           var self = this;
 
           setTimeout(function(){
+            self.emit('unload', self.goingToFloor);
             self.transition('idle');
 
-            if (!self.requestsStack.length){
-              return;
+            if (self.requestsStack.length){
+              console.log('about to move to ', self.requestsStack[0]);
+              self.handle('move', self.requestsStack[0]);
             }
-
-            self.handle('move', self.requestsStack[0]);
           }, 1000);
         },
         'move': queuedNotice

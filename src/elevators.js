@@ -7,8 +7,16 @@
       id: id
     });
 
-    e.on('idle', function (event) {
+    e.on('unload', function(floorNumber){
+      setFloorState(floorNumber, '');
+    });
+
+    e.on('idle', function (floorNumber, elevator) {
       context.onElevatorIdle(e, context.elevators);
+
+      setTimeout(function(){
+        checkIfScenarioIsComplete(context.elevators);
+      }, 2000);
     });
 
     return e;
