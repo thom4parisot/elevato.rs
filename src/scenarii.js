@@ -31,7 +31,7 @@ function runAllScenarios(){
 * Level 6 - Three elevators, ten floors, random
 * Level 7 - Four elevators, ten floors, lots of requests
 */
-var scenarii = [
+/*var scenarii = [
   // Introduction levels
   {
     elevators: 1,
@@ -218,7 +218,7 @@ var scenarii = [
       setTimeout(function(){ requestFloor(3); }, 19000);
       setTimeout(function(){ requestFloor(2); }, 19500);
       setTimeout(function(){ requestFloor(1); }, 20000);
-  },
+  }
 
 
-];
+];*/

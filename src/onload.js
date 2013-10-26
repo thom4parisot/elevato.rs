@@ -14,7 +14,16 @@
    CodeMirror Stuff
    */
   var editor = d.getElementById('editor');
-  editor.innerHTML = localStorage.previousCode || d.getElementById('evaluated-scripts').innerHTML;
+  var code = d.getElementById('evaluated-scripts');
+  var currentVersion = parseInt(code.getAttribute('data-version'), 10);
+
+  if (localStorage.previousCode && parseInt(localStorage.codeVersion, 10) <= currentVersion){
+    editor.innerHTML = localStorage.previousCode;
+  }
+  else{
+    editor.innerHTML = code.innerHTML;
+    localStorage.codeVersion = currentVersion;
+  }
 
   var strategyEditor = CodeMirror.fromTextArea(editor, {
     mode: {name: "javascript", json: true},
