@@ -1,4 +1,5 @@
 function requestFloor(floorNumber){
+  log('Elevator request at floor', floorNumber);
   onFloorRequest(floorNumber, elevators);
 }
 

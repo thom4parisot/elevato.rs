@@ -61,6 +61,11 @@
         shaft.classList.remove('hidden');
       }
     });
+
+    [].slice.call(d.querySelectorAll('.elevator')).forEach(function(elevator){
+      elevator.removeAttribute('style');
+      elevator.setAttribute('data-at-floor', 1);
+    });
   });
 
   /*
