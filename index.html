@@ -11,58 +11,62 @@
   </head>
 
   <body>
-      <div class="building column">
-        <dl class="shaft">
-	        <dt class="elevator" data-at-floor="1">elevators[0]</dt>
-          <dd class="floor" data-level="10"></dd>
-          <dd class="floor" data-level="9"></dd>
-          <dd class="floor" data-level="8"></dd>
-          <dd class="floor" data-level="7"></dd>
-          <dd class="floor" data-level="6"></dd>
-          <dd class="floor" data-level="5"></dd>
-          <dd class="floor" data-level="4"></dd>
-          <dd class="floor" data-level="3"></dd>
-          <dd class="floor" data-level="2"></dd>
-          <dd class="floor" data-level="1"></dd>
-        </dl><dl class="shaft">
-	        <dt class="elevator" data-at-floor="1">elevators[1]</dt>
-          <dd class="floor" data-level="10"></dd>
-          <dd class="floor" data-level="9"></dd>
-          <dd class="floor" data-level="8"></dd>
-          <dd class="floor" data-level="7"></dd>
-          <dd class="floor" data-level="6"></dd>
-          <dd class="floor" data-level="5"></dd>
-          <dd class="floor" data-level="4"></dd>
-          <dd class="floor" data-level="3"></dd>
-          <dd class="floor" data-level="2"></dd>
-          <dd class="floor" data-level="1"></dd>
-        </dl><dl class="shaft">
-          <dt class="elevator" data-at-floor="1">elevators[2]</dt>
-          <dd class="floor" data-level="10"></dd>
-          <dd class="floor" data-level="9"></dd>
-          <dd class="floor" data-level="8"></dd>
-          <dd class="floor" data-level="7"></dd>
-          <dd class="floor" data-level="6"></dd>
-          <dd class="floor" data-level="5"></dd>
-          <dd class="floor" data-level="4"></dd>
-          <dd class="floor" data-level="3"></dd>
-          <dd class="floor" data-level="2"></dd>
-          <dd class="floor" data-level="1"></dd>
-        </dl><dl class="shaft">
-	      <dt class="elevator" data-at-floor="1">elevators[3]</dt>
-          <dd class="floor" data-level="10"></dd>
-          <dd class="floor" data-level="9"></dd>
-          <dd class="floor" data-level="8"></dd>
-          <dd class="floor" data-level="7"></dd>
-          <dd class="floor" data-level="6"></dd>
-          <dd class="floor" data-level="5"></dd>
-          <dd class="floor" data-level="4"></dd>
-          <dd class="floor" data-level="3"></dd>
-          <dd class="floor" data-level="2"></dd>
-          <dd class="floor" data-level="1"></dd>
-        </dl>
-      </div>
+    <main>
+      <div class="column">
+        <h1>See you later, elevator!</h1>
 
+        <div class="building">
+          <dl class="shaft">
+            <dt class="elevator" data-at-floor="1">elevators[0]</dt>
+            <dd class="floor" data-level="10"></dd>
+            <dd class="floor" data-level="9"></dd>
+            <dd class="floor" data-level="8"></dd>
+            <dd class="floor" data-level="7"></dd>
+            <dd class="floor" data-level="6"></dd>
+            <dd class="floor" data-level="5"></dd>
+            <dd class="floor" data-level="4"></dd>
+            <dd class="floor" data-level="3"></dd>
+            <dd class="floor" data-level="2"></dd>
+            <dd class="floor" data-level="1"></dd>
+          </dl><dl class="shaft">
+            <dt class="elevator" data-at-floor="1">elevators[1]</dt>
+            <dd class="floor" data-level="10"></dd>
+            <dd class="floor" data-level="9"></dd>
+            <dd class="floor" data-level="8"></dd>
+            <dd class="floor" data-level="7"></dd>
+            <dd class="floor" data-level="6"></dd>
+            <dd class="floor" data-level="5"></dd>
+            <dd class="floor" data-level="4"></dd>
+            <dd class="floor" data-level="3"></dd>
+            <dd class="floor" data-level="2"></dd>
+            <dd class="floor" data-level="1"></dd>
+          </dl><dl class="shaft">
+            <dt class="elevator" data-at-floor="1">elevators[2]</dt>
+            <dd class="floor" data-level="10"></dd>
+            <dd class="floor" data-level="9"></dd>
+            <dd class="floor" data-level="8"></dd>
+            <dd class="floor" data-level="7"></dd>
+            <dd class="floor" data-level="6"></dd>
+            <dd class="floor" data-level="5"></dd>
+            <dd class="floor" data-level="4"></dd>
+            <dd class="floor" data-level="3"></dd>
+            <dd class="floor" data-level="2"></dd>
+            <dd class="floor" data-level="1"></dd>
+          </dl><dl class="shaft">
+          <dt class="elevator" data-at-floor="1">elevators[3]</dt>
+            <dd class="floor" data-level="10"></dd>
+            <dd class="floor" data-level="9"></dd>
+            <dd class="floor" data-level="8"></dd>
+            <dd class="floor" data-level="7"></dd>
+            <dd class="floor" data-level="6"></dd>
+            <dd class="floor" data-level="5"></dd>
+            <dd class="floor" data-level="4"></dd>
+            <dd class="floor" data-level="3"></dd>
+            <dd class="floor" data-level="2"></dd>
+            <dd class="floor" data-level="1"></dd>
+          </dl>
+        </div>
+      </div>
       <div class="column">
         <textarea id="editor" cols="30" rows="10"></textarea>
 
@@ -86,6 +90,7 @@
 
         <div id="logs"><!-- :-)  --></div>
       </div>
+    </main>
 
 <script id="evaluated-scripts" data-version="3" type="x-template">
 // called each time a call for a floor is done is called at some floor

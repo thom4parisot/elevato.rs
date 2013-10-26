@@ -41,7 +41,7 @@
    */
   var level = d.getElementById('level');
   level.addEventListener('change', function(e){
-    log('Switche to scenario', this.value);
+    log('Switched to scenario', this.value);
 
     prepare(this);
   });

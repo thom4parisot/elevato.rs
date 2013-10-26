@@ -2,16 +2,36 @@
   display: none !important;
 }
 
+body {
+  background: #A9B811 url('../media/elevator-ground.jpg') no-repeat center center;
+  background-size: cover;
+}
+
+main {
+  background-color: rgba(255, 255, 255, 0.5);
+  min-height: 800px;
+
+  display : -webkit-flex;
+  display : flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  padding: 15px;
+}
+
 .column {
   display: inline-block;
+  -webkit-flex: 1 1;
+  flex: 1 1;
+  text-align: center;
   vertical-align: top;
-  width: 50%;
 }
 
 .building{
-  background: green;
-  margin: 25px 50px;
-  width: auto;
+  background: #A9B811 url('../media/elevator-door.jpg') no-repeat center center;
+  background-size: contain;
+  display: inline-block;
+  margin: 0 auto;
+  text-align: left;
 }
 
 .building * {
@@ -86,10 +106,12 @@
   }
 
 #logs {
+  background: rgba(255, 255, 255, .85);
   border: 1px solid black;
   border-top: none;
   padding: 5px;
   font-family: monospace;
+  text-align: left;
 
   margin: 0;
   overflow: scroll;
