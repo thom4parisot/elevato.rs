@@ -92,8 +92,10 @@
      * @returns {*}
      */
     goToFloor: function(floor_number){
-      this.requestsStack.push(floor_number);
-      this.handle('move', floor_number);
+      if (~this.requestsStack.indexOf(floor_number) === 0){
+        this.requestsStack.push(floor_number);
+        this.handle('move', floor_number);
+      }
 
       return this;
     }
