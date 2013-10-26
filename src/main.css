@@ -4,6 +4,10 @@
   width: 50%;
 }
 
+.hidden{
+  display: none !important;
+}
+
 .building{
   background: green;
   margin: 25px 50px;

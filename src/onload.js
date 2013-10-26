@@ -36,6 +36,36 @@
 
   strategyEditor.setSize('100%', '100%');
 
+  /*
+   Selecting level
+   */
+  d.getElementById('level').addEventListener('change', function(e){
+    log('Changed to scenario', this.value);
+
+    var scenario = scenarii[this.value - 1];
+
+    [].slice.call(d.querySelectorAll('[data-level]')).forEach(function(floor){
+      if (floor.getAttribute('data-level') > scenario.floors){
+        floor.classList.add('hidden');
+      }
+      else{
+        floor.classList.remove('hidden');
+      }
+    });
+
+    [].slice.call(d.querySelectorAll('.shaft')).forEach(function(shaft, i){
+      if (parseInt(i, 10) >= scenario.elevators){
+        shaft.classList.add('hidden');
+      }
+      else{
+        shaft.classList.remove('hidden');
+      }
+    });
+  });
+
+  /*
+   Running scenario
+   */
   d.getElementById('run-code').addEventListener('click', function(){
     var code = strategyEditor.getValue();
     var level = d.getElementById('level').value;
