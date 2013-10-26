@@ -85,6 +85,9 @@ main {
   font-family: monospace;
   font-size: 0.9em;
 }
+#editor, .CodeMirror{
+  text-align: left;
+}
 #level-selector{
   display : -webkit-flex;
   display : flex;

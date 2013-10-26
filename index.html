@@ -92,7 +92,7 @@
       </div>
     </main>
 
-<script id="evaluated-scripts" data-version="3" type="x-template">
+<script id="evaluated-scripts" data-version="4" type="x-template">
 // called each time a call for a floor is done is called at some floor
 function onFloorRequest(floorNumber, elevators) {
   elevators[0].goToFloor(floorNumber);
@@ -100,7 +100,12 @@ function onFloorRequest(floorNumber, elevators) {
 
 // called each time an elevator becomes idle
 function onElevatorIdle(elevator, elevators) {
-  log('elevators['+elevator.id+'] still have to go to', elevator.requestsStack);
+  if (elevator.requestsStack.length){
+    log('elevators['+elevator.id+'] still have to go to', elevator.requestsStack);
+  }
+  else{
+    log('elevators['+elevator.id+'] is now idle');
+  }
 }
 </script>
 
