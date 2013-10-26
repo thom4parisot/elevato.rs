@@ -14,19 +14,23 @@
    CodeMirror Stuff
    */
   var editor = d.getElementById('editor');
-  editor.innerHTML = d.getElementById('evaluated-scripts').innerHTML;
+  editor.innerHTML = localStorage.previousCode || d.getElementById('evaluated-scripts').innerHTML;
 
   var strategyEditor = CodeMirror.fromTextArea(editor, {
     mode: {name: "javascript", json: true},
     lineNumbers: true,
     autofocus: true,
+    indentWithTabs: false,
+    tabSize: 2,
     theme: "solarized dark"
   });
 
   strategyEditor.setSize('100%', '100%');
 
   d.getElementById('run-code').addEventListener('click', function(){
-    var functions = eval(new Function(strategyEditor.getValue() + '; return { onFloorRequest: onFloorRequest, onElevatorIdle: onElevatorIdle }'))();
+    var code = strategyEditor.getValue();
+    localStorage.previousCode = code;
+    var functions = eval(new Function(code + '; return { onFloorRequest: onFloorRequest, onElevatorIdle: onElevatorIdle }'))();
 
     Object.keys(functions).forEach(function(functionName){
       context[functionName] = functions[functionName];
