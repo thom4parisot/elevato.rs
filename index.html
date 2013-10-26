@@ -55,17 +55,15 @@
         <div id="logs"><!-- :-)  --></div>
       </div>
 
-<script id="evaluated-scripts" data-version="1">
+<script id="evaluated-scripts" data-version="2">
 // called each time a call for a floor is done is called at some floor
 function onFloorRequest(floorNumber, elevators) {
-
+  elevators[0].goToFloor(floorNumber);
 }
 
 // called each time an elevator becomes idle
 function onElevatorIdle(elevator, elevators) {
-  log('old callback');
-
-  if (elevator.id === 3){
+  if (elevator.id === 0){
     log(elevator.requestsStack);
   }
 }
