@@ -12,7 +12,6 @@ function setFloorState(floorNumber, state){
 
 function checkIfScenarioIsComplete(elevators){
   var allIdle = elevators.some(function(elevator){
-    log(elevator.state);
     return elevator.state === "idle";
   });
 
