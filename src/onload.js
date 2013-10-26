@@ -17,11 +17,11 @@
   var code = d.getElementById('evaluated-scripts');
   var currentVersion = parseInt(code.getAttribute('data-version'), 10);
 
-  if (localStorage.previousCode && parseInt(localStorage.codeVersion, 10) <= currentVersion){
+  if (localStorage.previousCode && parseInt(localStorage.codeVersion, 10) >= currentVersion){
     editor.innerHTML = localStorage.previousCode;
   }
   else{
-    editor.innerHTML = code.innerHTML;
+    editor.innerHTML = localStorage.previousCode = code.innerHTML;
     localStorage.codeVersion = currentVersion;
   }
 
@@ -41,7 +41,7 @@
    */
   var level = d.getElementById('level');
   level.addEventListener('change', function(e){
-    log('Changed to scenario', this.value);
+    log('Switche to scenario', this.value);
 
     prepare(this);
   });

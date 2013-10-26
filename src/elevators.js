@@ -7,10 +7,6 @@
       id: id
     });
 
-    e.on('moving', function (event) {
-      context.onFloorRequest(e, context.elevators)
-    });
-
     e.on('idle', function (event) {
       context.onElevatorIdle(e, context.elevators);
     });

@@ -81,13 +81,13 @@
               <option value="7">Four elevators, ten floors, lots of requests</option>
             </optgroup>
           </select>
-          <button id="run-code">Run Code</button>
+          <button id="run-code">Run Scenario</button>
         </div>
 
         <div id="logs"><!-- :-)  --></div>
       </div>
 
-<script id="evaluated-scripts" data-version="2" type="x-template">
+<script id="evaluated-scripts" data-version="3" type="x-template">
 // called each time a call for a floor is done is called at some floor
 function onFloorRequest(floorNumber, elevators) {
   elevators[0].goToFloor(floorNumber);
@@ -95,9 +95,7 @@ function onFloorRequest(floorNumber, elevators) {
 
 // called each time an elevator becomes idle
 function onElevatorIdle(elevator, elevators) {
-  if (elevator.id === 0){
-    log(elevator.requestsStack);
-  }
+  log('elevators['+elevator.id+'] still have to go to', elevator.requestsStack);
 }
 </script>
 

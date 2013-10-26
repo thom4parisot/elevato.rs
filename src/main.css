@@ -34,7 +34,7 @@
   width: 100px;
 }
 .floor:before{
-  content: '.goToFloor(' attr(data-level) ')';
+  content: attr(data-level);
   margin: 3px;
 }
 
