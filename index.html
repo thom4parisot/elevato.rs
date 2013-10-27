@@ -6,64 +6,111 @@
     <link rel="stylesheet" type="text/css" href="bower_components/codemirror/lib/codemirror.css">
     <link rel="stylesheet" type="text/css" href="bower_components/codemirror/theme/solarized.css">
     <link rel="stylesheet" type="text/css" href="src/main.css">
+
     <title> See you later elevator </title>
   </head>
 
   <body>
-      <div class="building column">
-        <dl class="shaft">
-          <dt class="elevator" data-at-floor="1">Elevator</dt>
-          <dd class="floor" data-level="6"></dd>
-          <dd class="floor" data-level="5"></dd>
-          <dd class="floor" data-level="4"></dd>
-          <dd class="floor" data-level="3"></dd>
-          <dd class="floor" data-level="2"></dd>
-          <dd class="floor" data-level="1"></dd>
-        </dl><dl class="shaft">
-          <dt class="elevator" data-at-floor="1">Elevator</dt>
-          <dd class="floor" data-level="6"></dd>
-          <dd class="floor" data-level="5"></dd>
-          <dd class="floor" data-level="4"></dd>
-          <dd class="floor" data-level="3"></dd>
-          <dd class="floor" data-level="2"></dd>
-          <dd class="floor" data-level="1"></dd>
-        </dl><dl class="shaft">
-          <dt class="elevator" data-at-floor="1">Elevator</dt>
-          <dd class="floor" data-level="6"></dd>
-          <dd class="floor" data-level="5"></dd>
-          <dd class="floor" data-level="4"></dd>
-          <dd class="floor" data-level="3"></dd>
-          <dd class="floor" data-level="2"></dd>
-          <dd class="floor" data-level="1"></dd>
-        </dl><dl class="shaft">
-          <dt class="elevator" data-at-floor="1">Elevator</dt>
-          <dd class="floor" data-level="6"></dd>
-          <dd class="floor" data-level="5"></dd>
-          <dd class="floor" data-level="4"></dd>
-          <dd class="floor" data-level="3"></dd>
-          <dd class="floor" data-level="2"></dd>
-          <dd class="floor" data-level="1"></dd>
-        </dl>
-      </div>
+    <main>
+      <div class="column">
+        <h1>See you later, elevator!</h1>
 
+        <div class="building">
+          <dl class="shaft">
+            <dt class="elevator" data-at-floor="1">elevators[0]</dt>
+            <dd class="floor" data-level="10"></dd>
+            <dd class="floor" data-level="9"></dd>
+            <dd class="floor" data-level="8"></dd>
+            <dd class="floor" data-level="7"></dd>
+            <dd class="floor" data-level="6"></dd>
+            <dd class="floor" data-level="5"></dd>
+            <dd class="floor" data-level="4"></dd>
+            <dd class="floor" data-level="3"></dd>
+            <dd class="floor" data-level="2"></dd>
+            <dd class="floor" data-level="1"></dd>
+          </dl><dl class="shaft">
+            <dt class="elevator" data-at-floor="1">elevators[1]</dt>
+            <dd class="floor" data-level="10"></dd>
+            <dd class="floor" data-level="9"></dd>
+            <dd class="floor" data-level="8"></dd>
+            <dd class="floor" data-level="7"></dd>
+            <dd class="floor" data-level="6"></dd>
+            <dd class="floor" data-level="5"></dd>
+            <dd class="floor" data-level="4"></dd>
+            <dd class="floor" data-level="3"></dd>
+            <dd class="floor" data-level="2"></dd>
+            <dd class="floor" data-level="1"></dd>
+          </dl><dl class="shaft">
+            <dt class="elevator" data-at-floor="1">elevators[2]</dt>
+            <dd class="floor" data-level="10"></dd>
+            <dd class="floor" data-level="9"></dd>
+            <dd class="floor" data-level="8"></dd>
+            <dd class="floor" data-level="7"></dd>
+            <dd class="floor" data-level="6"></dd>
+            <dd class="floor" data-level="5"></dd>
+            <dd class="floor" data-level="4"></dd>
+            <dd class="floor" data-level="3"></dd>
+            <dd class="floor" data-level="2"></dd>
+            <dd class="floor" data-level="1"></dd>
+          </dl><dl class="shaft">
+          <dt class="elevator" data-at-floor="1">elevators[3]</dt>
+            <dd class="floor" data-level="10"></dd>
+            <dd class="floor" data-level="9"></dd>
+            <dd class="floor" data-level="8"></dd>
+            <dd class="floor" data-level="7"></dd>
+            <dd class="floor" data-level="6"></dd>
+            <dd class="floor" data-level="5"></dd>
+            <dd class="floor" data-level="4"></dd>
+            <dd class="floor" data-level="3"></dd>
+            <dd class="floor" data-level="2"></dd>
+            <dd class="floor" data-level="1"></dd>
+          </dl>
+        </div>
+      </div>
       <div class="column">
         <textarea id="editor" cols="30" rows="10"></textarea>
 
-        <div><button id="run-code">Run Code</button></div>
+        <div id="level-selector">
+          <select name="level" id="level">
+            <option value="">Choose your level</option>
+            <optgroup label="Introduction">
+              <option value="1">One elevator, two floor, one request</option>
+              <option value="2">One elevator, three floor, two requests very close, one a bit later</option>
+              <option value="3">Two elevators, five floors, two requests very close</option>
+            </optgroup>
+            <optgroup label="challenge">
+              <option value="4">Two elevators, seven floors, lots of requests</option>
+              <option value="5">Three elevators, seven floors, lots of requests</option>
+              <option value="6">Three elevators, ten floors, random</option>
+              <option value="7">Four elevators, ten floors, lots of requests</option>
+            </optgroup>
+          </select>
+          <button id="run-code">Run Scenario</button>
+        </div>
 
         <div id="logs"><!-- :-)  --></div>
+
+        <p>Made with ♥ at <a href="http://mozillafestival.org/">Mozilla Festival 2013</a>
+          by <a href="https://twitter.com/DavidBruant" rel="author">David Bruant</a>
+          and <a href="https://twitter.com/oncletom" rel="author">Thomas Parisot</a>.
+        </p>
       </div>
+    </main>
 
-<script id="evaluated-scripts">
-function onElevatorRequest(elevator, otherElevators) {
-
-  // do something when an elevator is asked to reach a certain floor
-
+<script id="evaluated-scripts" data-version="4" type="x-template">
+// called each time a call for a floor is done is called at some floor
+function onFloorRequest(floorNumber, elevators) {
+  elevators[0].goToFloor(floorNumber);
 }
 
-function onElevatorIdle(elevator, otherElevators) {
-  log(elevator.requestsStack)
-  // do something when an elevator becomes idle
+// called each time an elevator becomes idle
+function onElevatorIdle(elevator, elevators) {
+  if (elevator.requestsStack.length){
+    log('elevators['+elevator.id+'] still have to go to', elevator.requestsStack);
+  }
+  else{
+    log('elevators['+elevator.id+'] is now idle');
+  }
 }
 </script>
 

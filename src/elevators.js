@@ -1,25 +1,25 @@
-(function(global){
+(function (context) {
   "use strict";
 
-  document.addEventListener('DOMContentLoaded', function(){
-
-    global.elevators = [].slice.call(document.querySelectorAll('.shaft .elevator')).map(function(el){
-      var e = new Elevator({
-        el: el
-      });
-
-      e.on('moving', function(event){
-        onElevatorRequest(e, global.elevators)
-      });
-
-      e.on('idle', function(event){
-        onElevatorIdle(e, global.elevators);
-      });
-
-      return e;
+  context.elevators = [].slice.call(document.querySelectorAll('.shaft .elevator')).map(function (el, id) {
+    var e = new Elevator({
+      el: el,
+      id: id
     });
 
-    //Object.freeze(elevators);
+    e.on('unload', function(floorNumber){
+      setFloorState(floorNumber, '');
+    });
+
+    e.on('idle', function (floorNumber, elevator) {
+      context.onElevatorIdle(e, context.elevators);
+
+      setTimeout(function(){
+        checkIfScenarioIsComplete(context.elevators);
+      }, 2000);
+    });
+
+    return e;
   });
 
 })(this);

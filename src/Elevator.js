@@ -39,8 +39,11 @@
        */
       'idle': {
         _onEnter: function(){
+          if (!this.requestsStack.length){
+            this.emit('idle', this.goingToFloor, this);
+          }
+
           this.goingToFloor = null;
-          this.emit('idle', this);
         },
         'move': function(floor_number){
           this.transition('moving');
@@ -50,8 +53,10 @@
 
           // using this.goingToFloor because the event might change the direction
           // hardcoding :-( related to CSS height & margin
+          var floorDiff = Math.abs(this.goingToFloor - this.previousFloor);
+
           this.el.style.bottom = ((this.goingToFloor - 1)*100 + 2) + 'px';
-          this.el.style.transitionDuration = Math.abs(this.goingToFloor - this.previousFloor)+"s";
+          this.el.style.transitionDuration = (floorDiff - (0.1*floorDiff))+"s";
           this.el.setAttribute('data-at-floor', this.goingToFloor);
         }
       },
@@ -69,13 +74,13 @@
           var self = this;
 
           setTimeout(function(){
+            self.emit('unload', self.goingToFloor);
             self.transition('idle');
 
-            if (!self.requestsStack.length){
-              return;
+            if (self.requestsStack.length){
+              console.log('about to move to ', self.requestsStack[0]);
+              self.handle('move', self.requestsStack[0]);
             }
-
-            self.handle('move', self.requestsStack[0]);
           }, 1000);
         },
         'move': queuedNotice
@@ -89,8 +94,10 @@
      * @returns {*}
      */
     goToFloor: function(floor_number){
-      this.requestsStack.push(floor_number);
-      this.handle('move', floor_number);
+      if (~this.requestsStack.indexOf(floor_number) === 0){
+        this.requestsStack.push(floor_number);
+        this.handle('move', floor_number);
+      }
 
       return this;
     }
