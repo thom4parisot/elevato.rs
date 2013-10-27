@@ -22,6 +22,8 @@ The only thing to do is to **orchestrate elevators**: sending them to a specific
 
 Challenges are ranked in a **progressive difficulty order**. You can start at level 7, no one will hate you for that.
 
+> [Play **See You Later Elevator** challenges](http://davidbruant.github.io/SeeYouLaterElevator/)
+
 ## Handling Requests
 
 > TBD.
