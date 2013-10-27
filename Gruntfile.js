@@ -7,6 +7,7 @@ module.exports = function(grunt){
         src: [
           'index.html',
           'src/**/*',
+          'media/*',
           'bower_components/**/*.{css,js}'
         ],
         dest: 'dist/'
@@ -26,7 +27,8 @@ module.exports = function(grunt){
           '.gitignore'
         ],
         options: {
-          base: 'dist/'
+          base: 'dist/',
+          repo: 'git://github.com/DavidBruant/SeeYouLaterElevator.git'
         }
       }
     },

@@ -1,7 +1,9 @@
 SeeYouLaterElevator
 ===================
 
-Learning web technologies by fixing elevators
+Learning web technologies by fixing elevators.
+
+> Demo on http://davidbruant.github.io/SeeYouLaterElevator/
 
 
 # Building It
