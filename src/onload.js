@@ -34,7 +34,7 @@
     theme: "solarized dark"
   });
 
-  strategyEditor.setSize('100%', '100%');
+  strategyEditor.setSize('100%', '450px');
 
   /*
    Selecting level
