@@ -6,7 +6,6 @@ module.exports = function(grunt){
       'static': {
         src: [
           'index.html',
-          'src/CNAME',
           'src/**/*',
           'media/*',
           'bower_components/**/*.{css,js}'
@@ -16,7 +15,7 @@ module.exports = function(grunt){
       trick: {
         expand: true,
         flatten: true,
-        src: 'src/.gitignore',
+        src: ['src/.gitignore', 'src/CNAME'],
         dest: 'dist'
       }
     },
