@@ -1,7 +1,7 @@
 function requestFloor(floorNumber){
   log('Elevator request at floor', floorNumber);
   setFloorState(floorNumber, 'waiting');
-  onFloorRequest(floorNumber, elevators);
+  onFloorRequest(floorNumber, elevators.filter(function(e){ return !e.el.parentNode.hidden; }));
 }
 
 function setFloorState(floorNumber, state){

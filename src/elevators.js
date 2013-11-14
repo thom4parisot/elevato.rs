@@ -1,7 +1,7 @@
 (function (context) {
   "use strict";
 
-  context.elevators = [].slice.call(document.querySelectorAll('.shaft:not([hidden]) .elevator')).map(function (el, id) {
+  context.elevators = [].slice.call(document.querySelectorAll('.shaft .elevator')).map(function (el, id) {
     var e = new Elevator({
       el: el,
       id: id
