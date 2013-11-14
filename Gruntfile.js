@@ -28,7 +28,7 @@ module.exports = function(grunt){
         ],
         options: {
           base: 'dist/',
-          repo: 'git://github.com/DavidBruant/SeeYouLaterElevator.git'
+          repo: 'git@github.com:DavidBruant/SeeYouLaterElevator.git'
         }
       }
     },
