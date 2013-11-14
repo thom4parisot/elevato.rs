@@ -35,7 +35,7 @@ module.exports = function(grunt){
 
     open: {
       ghp: {
-        path: 'http://davidbruant.github.io/SeeYouLaterElevator/'
+        path: 'http://elevato.rs'
       }
     }
   });
