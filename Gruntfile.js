@@ -6,6 +6,7 @@ module.exports = function(grunt){
       'static': {
         src: [
           'index.html',
+          'src/CNAME',
           'src/**/*',
           'media/*',
           'bower_components/**/*.{css,js}'
