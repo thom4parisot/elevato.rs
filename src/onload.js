@@ -31,7 +31,12 @@
     autofocus: true,
     indentWithTabs: false,
     tabSize: 2,
-    theme: "solarized dark"
+    theme: "solarized dark",
+    extraKeys : {
+      "Ctrl-S": function() {
+        d.getElementById('run-code').click();
+      }
+    }
   });
 
   strategyEditor.setSize('100%', '450px');
