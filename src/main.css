@@ -141,7 +141,3 @@ body[data-state="failure"] main{
   #logs p:before{
     content: "» ";
   }
-
-.CodeMirror pre {
-  font-size: 0.9em;
-}

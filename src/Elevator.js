@@ -1,7 +1,7 @@
 (function(context){
   "use strict";
 
-  function animationEnd(e){
+  function amimationEnd(e){
     this.previousFloor = this.requestsStack.shift();
 
     this.transition('unloading');
@@ -30,9 +30,8 @@
       //we do it here otherwise the stack is shared among the various elevators (and we don't want it)
       this.requestsStack = [];
 
-      this.el.addEventListener('animationend', animationEnd.bind(this));
-      this.el.addEventListener('mozAnimationEnd', animationEnd.bind(this));
-      this.el.addEventListener('webkitTransitionEnd', animationEnd.bind(this));
+      this.el.addEventListener('animationend', amimationEnd.bind(this));
+      this.el.addEventListener('webkitTransitionEnd', amimationEnd.bind(this));
     },
     states: {
       /**
