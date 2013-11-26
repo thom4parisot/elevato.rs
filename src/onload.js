@@ -36,6 +36,9 @@
     extraKeys : {
       "Ctrl-S": function() {
         d.getElementById('run-code').click();
+      },
+      "Cmd-S": function() {
+        d.getElementById('run-code').click();
       }
     }
   });
