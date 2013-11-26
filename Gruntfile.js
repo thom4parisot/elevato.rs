@@ -15,7 +15,7 @@ module.exports = function(grunt){
       trick: {
         expand: true,
         flatten: true,
-        src: 'src/.gitignore',
+        src: ['src/.gitignore', 'src/CNAME'],
         dest: 'dist'
       }
     },
@@ -28,14 +28,14 @@ module.exports = function(grunt){
         ],
         options: {
           base: 'dist/',
-          repo: 'git://github.com/DavidBruant/SeeYouLaterElevator.git'
+          repo: 'git@github.com:DavidBruant/SeeYouLaterElevator.git'
         }
       }
     },
 
     open: {
       ghp: {
-        path: 'http://davidbruant.github.io/SeeYouLaterElevator/'
+        path: 'http://elevato.rs'
       }
     }
   });
