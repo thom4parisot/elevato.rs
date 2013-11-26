@@ -4,10 +4,11 @@
   context.log = function(){
     var container = document.getElementById('logs');
     var l = document.createElement('p');
-    l.innerText = [].slice.call(arguments).join(' ');
+    var args = [].slice.call(arguments);
+    l.innerHTML = args.join(' ');
 
     container.insertBefore(l, container.childNodes[0]);
-    console.log(arguments);
+    console.log(args);
   }
 
   /*
