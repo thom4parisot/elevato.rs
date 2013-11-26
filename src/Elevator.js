@@ -30,9 +30,8 @@
       //we do it here otherwise the stack is shared among the various elevators (and we don't want it)
       this.requestsStack = [];
 
-      this.el.addEventListener('animationend', animationEnd.bind(this));
-      this.el.addEventListener('mozAnimationEnd', animationEnd.bind(this));
-      this.el.addEventListener('webkitTransitionEnd', animationEnd.bind(this));
+      this.el.addEventListener('transitionend', animationEnd.bind(self));
+      this.el.addEventListener('webkitTransitionEnd', animationEnd.bind(self));
     },
     states: {
       /**
