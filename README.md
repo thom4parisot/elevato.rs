@@ -1,10 +1,10 @@
-# See You Later Elevator
+# See You Later Elevator [![Build Status](https://travis-ci.org/oncletom/elevato.rs.png?branch=master)](https://travis-ci.org/oncletom/elevato.rs)
 
 **See You Later Elevator** is a simple tool to question yourself about *programming* and *what is the mindset of programming*.
 
 The only thing to do is to **orchestrate elevators**: sending them to a specific floor.
 
-[![Demo](media/demo.gif)](http://davidbruant.github.io/SeeYouLaterElevator/)
+[![Demo](media/demo.gif)](http://elevato.rs)
 
 **See You Later Elevator** has been built by [David Bruant](https://twitter.com/DavidBruant) and [Thomas Parisot](https://oncletom.io) at [Mozilla Festival 2013](http://mozillafestival.org) in London.
 
@@ -22,7 +22,7 @@ The only thing to do is to **orchestrate elevators**: sending them to a specific
 
 Challenges are ranked in a **progressive difficulty order**. You can start at level 7, no one will hate you for that.
 
-> [Play **See You Later Elevator** challenges](http://davidbruant.github.io/SeeYouLaterElevator/)
+> [Play **See You Later Elevator** challenges](http://elevato.rs)
 
 ## Handling Requests
 
@@ -46,7 +46,7 @@ npm install
 
 ## Deploy on Github Pages
 
-It will once requires you to install [grunt]() globally:
+It will once requires you to install [grunt](http://gruntjs.com) globally:
 
 ```bash
 npm install -g grunt

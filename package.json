@@ -1,5 +1,5 @@
 {
-  "name": "seeyoulaterelevator",
+  "name": "elevators",
   "private": true,
   "version": "1.0.0",
   "description": "SeeYouLaterElevator",
@@ -11,12 +11,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/DavidBruant/SeeYouLaterElevator.git"
+    "url": "git://github.com/oncletom/elevato.rs.git"
   },
   "author": "",
   "license": "Unlicense",
   "bugs": {
-    "url": "https://github.com/DavidBruant/SeeYouLaterElevator/issues"
+    "url": "https://github.com/oncletom/elevato.rs/issues"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
