@@ -25,13 +25,11 @@
     goingToFloor: 1,
     previousFloor: 1,
     initialize: function(){
-      var self = this;
-
       //we do it here otherwise the stack is shared among the various elevators (and we don't want it)
       this.requestsStack = [];
 
-      this.el.addEventListener('transitionend', animationEnd.bind(self));
-      this.el.addEventListener('webkitTransitionEnd', animationEnd.bind(self));
+      this.el.addEventListener('transitionend', animationEnd.bind(this));
+      this.el.addEventListener('webkitTransitionEnd', animationEnd.bind(this));
     },
     states: {
       /**
@@ -91,10 +89,13 @@
      *
      * @api
      * @param floor_number
-     * @returns {*}
+     * @returns {Elevator}
      */
     goToFloor: function(floor_number){
-      if (~this.requestsStack.indexOf(floor_number) === 0){
+      if (
+        this.requestsStack.indexOf(floor_number) === -1
+        && this.previousFloor !== floor_number
+      ){
         this.requestsStack.push(floor_number);
         this.handle('move', floor_number);
       }
