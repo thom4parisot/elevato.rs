@@ -9,7 +9,6 @@ body {
 
 main {
   background-color: rgba(255, 255, 255, 0.5);
-  min-height: 800px;
 
   display : -webkit-flex;
   display : flex;
@@ -27,17 +26,23 @@ body[data-state="failure"] main{
 
 .column {
   display: inline-block;
-  -webkit-flex: 1 1;
-  flex: 1 1;
   text-align: center;
   vertical-align: top;
 }
 
+.column-building {
+  width: 25%;
+}
+.column-code {
+  width: 75%;
+}
+
 .building{
-  background: #A9B811 url('../media/elevator-door.jpg') no-repeat center center;
+  background: #fff;
   background-size: contain;
   display: inline-block;
   margin: 0 auto;
+  padding: 1px;
   text-align: left;
 }
 
@@ -54,12 +59,12 @@ body[data-state="failure"] main{
 }
 
 .floor{
-  border: 2px solid green;
+  background: #A9B811;
   color: white;
-  height: 100px;
-  margin: 0;
+  height: 50px;
+  margin: 1px;
   transition: border 0.5s ease-in;
-  width: 100px;
+  width: 50px;
 }
 .floor[data-state="waiting"]{
   border-color: orange;
@@ -73,12 +78,12 @@ body[data-state="failure"] main{
 .elevator{
   padding: 0;
   position: absolute;
-  bottom: 2px;
-  left: 2px;
-  margin: 0;
-  width: 96px;
-  height: 96px;
-  line-height: 96px;
+  bottom: 0;
+  left: 0;
+  margin: 1px;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
   vertical-align: middle;
   text-align: center;
   background-color: #647;
@@ -109,7 +114,7 @@ body[data-state="failure"] main{
   #level-selector button,
   #level-selector select {
     background: limegreen;
-    border: 1px solid #ccc;
+    border: none;
     cursor: pointer;
     -webkit-flex: 1 1;
     flex: 1 1;
