@@ -7,25 +7,19 @@ var editor = require('./ui/editor').create();
 var scenarii = require('./scenarii');
 var elevators = require('./elevators').create();
 
-document.getElementById('level').addEventListener('change', function(){
-  var currentScenario = scenarii.getCurrent();
-  var bodyEl = document.querySelector('body');
+var updateStatus = function updateStatus(){
+  require('./elevators').updateStatus(scenarii.getCurrent());
+};
 
-  if (!currentScenario){
-    return;
-  }
-
-  bodyEl.setAttribute('data-floors', currentScenario.floors);
-  bodyEl.setAttribute('data-elevators', currentScenario.elevators);
-});
+document.getElementById('level').addEventListener('change', updateStatus);
+setTimeout(updateStatus, 0);
 
 document.getElementById('run-code').addEventListener('click', function(){
-  var code = editor.getValue();
   var currentScenario = scenarii.getCurrent();
 
-  localStorage.previousCode = code;
+  editor.save();
 
   if (currentScenario){
-    scenarii.runScenario(currentScenario);
+    scenarii.runScenario(currentScenario, elevators);
   }
 });

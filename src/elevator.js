@@ -23,11 +23,14 @@ function queuedNotice(){
 module.exports = machina().Fsm.extend({
   initialState: "idle",
   el: null,
+  elementHeight: 0,
   goingToFloor: 1,
   previousFloor: 1,
   initialize: function(){
     //we do it here otherwise the stack is shared among the various elevators (and we don't want it)
     this.requestsStack = [];
+
+    this.elementHeight = this.el.clientHeight;
 
     this.el.addEventListener('transitionend', animationEnd.bind(this));
     this.el.addEventListener('webkitTransitionEnd', animationEnd.bind(this));
@@ -51,10 +54,9 @@ module.exports = machina().Fsm.extend({
         this.emit('moving', this);
 
         // using this.goingToFloor because the event might change the direction
-        // hardcoding :-( related to CSS height & margin
         var floorDiff = Math.abs(this.goingToFloor - this.previousFloor);
 
-        this.el.style.bottom = ((this.goingToFloor - 1)*100 + 2) + 'px';
+        this.el.style.bottom = ((this.goingToFloor - 1) * (this.elementHeight + 1)) + 'px';
         this.el.style.transitionDuration = (floorDiff - (0.1*floorDiff))+"s";
         this.el.setAttribute('data-at-floor', this.goingToFloor);
       }
@@ -77,7 +79,7 @@ module.exports = machina().Fsm.extend({
           self.transition('idle');
 
           if (self.requestsStack.length){
-            console.log('about to move to ', self.requestsStack[0]);
+            console.log('#%s -> floor %s', self.id, self.requestsStack[0]);
             self.handle('move', self.requestsStack[0]);
           }
         }, 1000);

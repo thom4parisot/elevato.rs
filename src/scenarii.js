@@ -12,8 +12,9 @@ module.exports = {
 
     return data[level] || null;
   },
-  runScenario: function runScenario(scenario){
-    var functions = eval(new Function(localStorage.previousCode + '; return { onFloorRequest: onFloorRequest, onElevatorIdle: onElevatorIdle }'))();
+  runScenario: function runScenario(scenario, allElevators){
+    var currentCode = document.querySelector('#editor').value.trim();
+    var functions = eval(new Function(currentCode + '; return { onFloorRequest: onFloorRequest, onElevatorIdle: onElevatorIdle }'))();
 
     Object.keys(functions).forEach(function(functionName){
       window[functionName] = functions[functionName];
@@ -26,8 +27,9 @@ module.exports = {
       throw new Error('An "onElevatorIdle" function must be defined somewhere');
 
     var start = Date.now();
+    var configuredRequestFloorCallback = requestFloor.bind(null, allElevators.slice(0, scenario.elevators));
 
-    scenario.run(requestFloor);
+    scenario.run(configuredRequestFloorCallback);
 
     return (function(start){
       return function checkIfScenarioIsComplete(elevators){

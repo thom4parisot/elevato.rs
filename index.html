@@ -10,7 +10,7 @@
     <title>Elevator simulator: use JavaScript to implement your destination dispatch algorithm — elevato.rs</title>
   </head>
 
-  <body data-elevators="4" data-floors="10">
+  <body data-elevators="" data-floors="">
     <main>
       <div class="column column-building">
         <div class="building">
@@ -86,8 +86,7 @@
 
 <textarea id="editor" cols="30" rows="10">// called each time a call for a floor is done is called at some floor
 function onFloorRequest(floorNumber, elevators) {
-  console.log('In onFloorRequest, the floorNumber variable value is', floorNumber);
-  elevators[0].goToFloor(2);
+  elevators[0].goToFloor(floorNumber);
 }
 
 // called each time an elevator becomes idle

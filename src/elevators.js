@@ -17,22 +17,18 @@ function getElevators(){
   return Array.prototype.slice.call(document.querySelectorAll('.elevator'));
 }
 
-function getActiveElevators(){
-  var count = Number(document.querySelector('body').getAttribute('data-elevators'));
-
-  return elevators.slice(0, count);
+function getElevatorCount(){
+  return Number(document.querySelector('body').getAttribute('data-elevators'));
 }
 
 module.exports = {
-  getElevators: getElevators,
-  getActiveElevators: getActiveElevators,
-  requestFloor: function requestFloor(floorNumber){
+  requestFloor: function requestFloor(elevators, floorNumber){
     console.log('Elevator request at floor', floorNumber);
     setFloorState(floorNumber, 'waiting');
-    window.onFloorRequest(floorNumber, getActiveElevators());
+    window.onFloorRequest(floorNumber, elevators);
   },
   create: function(){
-    elevators = this.getElevators().map(function (el, id) {
+    elevators = getElevators().map(function (el, id) {
       var e = new Elevator({
         el: el,
         id: id
@@ -43,12 +39,22 @@ module.exports = {
       });
 
       e.on('idle', function (floorNumber, elevator) {
-        window.onElevatorIdle(e, elevator, getActiveElevators());
+        window.onElevatorIdle(elevator, elevators.slice(0, getElevatorCount()));
       });
 
       return e;
     });
 
     return elevators;
+  },
+  updateStatus: function updateStatus(currentScenario){
+    var bodyEl = document.querySelector('body');
+
+    if (!currentScenario){
+      return;
+    }
+
+    bodyEl.setAttribute('data-floors', currentScenario.floors);
+    bodyEl.setAttribute('data-elevators', currentScenario.elevators);
   }
 };
