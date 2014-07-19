@@ -3,11 +3,11 @@
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="bower_components/normalize-css/normalize.css">
-    <link rel="stylesheet" type="text/css" href="bower_components/codemirror/lib/codemirror.css">
-    <link rel="stylesheet" type="text/css" href="bower_components/codemirror/theme/solarized.css">
+    <link rel="stylesheet" type="text/css" href="src/ui/codemirror.css">
+    <link rel="stylesheet" type="text/css" href="src/ui/neo.css">
     <link rel="stylesheet" type="text/css" href="src/main.css">
 
-    <title> See you later elevator </title>
+    <title>Elevator simulator: use JavaScript to implement your destination dispatch algorithm — elevato.rs</title>
   </head>
 
   <body data-elevators="4" data-floors="10">
@@ -81,7 +81,7 @@
               <option value="7">Four elevators, ten floors, lots of requests</option>
             </optgroup>
           </select>
-          <button id="run-code">Run Scenario</button>
+          <button id="run-code">Run this scenario</button>
         </div>
 
 <textarea id="editor" cols="30" rows="10">// called each time a call for a floor is done is called at some floor
@@ -99,18 +99,21 @@ function onElevatorIdle(elevator, elevators) {
     console.log('elevators['+elevator.id+'] is now idle');
   }
 }</textarea>
-
-        <p>Made with ♥ at <a href="http://mozillafestival.org/">Mozilla Festival 2013</a>
-          by <a href="https://twitter.com/DavidBruant" rel="author">David Bruant</a>
-          and <a href="https://twitter.com/oncletom" rel="author">Thomas Parisot</a>.
-        </p>
-
-        <p><a href="https://github.com/DavidBruant/SeeYouLaterElevator">Fix/Clone/Fork on Github</a>.</p>
       </div>
     </main>
 
-    <script src="bower_components/codemirror/lib/codemirror.js"></script>
-    <script src="bower_components/codemirror/mode/javascript/javascript.js"></script>
+    <footer>
+      <p>
+        Made with <span class="love">♥</span> at <a href="http://mozillafestival.org/">Mozilla Festival 2013</a>
+        by <a href="https://twitter.com/DavidBruant" rel="author">David Bruant</a>
+        and <a href="https://twitter.com/oncletom" rel="author">Thomas Parisot</a>
+
+        —
+
+        <a href="https://github.com/oncletom/elevato.rs">Contribute an idea/issue</a>
+      </p>
+    </footer>
+
     <script src="src/bundle.js" async></script>
   </body>
 </html>

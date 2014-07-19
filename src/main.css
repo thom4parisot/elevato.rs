@@ -3,25 +3,29 @@
 }
 
 body {
-  background: #A9B811 url('../media/elevator-ground.jpg') no-repeat center center;
-  background-size: cover;
+  background: #fafafa;
+  color: #333;
+}
+
+a,
+a:link {
+  color: #0074D9;
+}
+a:hover {
+  color: #FF4136;
+}
+
+.love {
+  color: #FF4136;
 }
 
 main {
-  background-color: rgba(255, 255, 255, 0.5);
-
   display : -webkit-flex;
   display : flex;
   -webkit-flex-direction: row;
   flex-direction: row;
-  padding: 15px;
-}
-body[data-state="success"] main{
-  background-image: url('../media/state-success.gif');
-  color: #fff;
-}
-body[data-state="failure"] main{
-  background-image: url('../media/state-failure.gif');
+  margin: 0;
+  padding: 0;
 }
 
 .column {
@@ -38,11 +42,11 @@ body[data-state="failure"] main{
 }
 
 .building{
-  background: #fff;
+  background: #fafafa;
   background-size: contain;
   display: inline-block;
   margin: 0 auto;
-  padding: 1px;
+  padding: 0;
   text-align: left;
 }
 
@@ -59,15 +63,17 @@ body[data-state="failure"] main{
 }
 
 .floor{
-  background: #A9B811;
+  background: #2ECC40;
   color: white;
   height: 50px;
+  line-height: 50px;
   margin: 1px;
   transition: border 0.5s ease-in;
+  vertical-align: middle;
   width: 50px;
 }
 .floor[data-state="waiting"]{
-  border-color: orange;
+  border-color: #FFDC00;
   border-width: 10px;
 }
 .floor:before{
@@ -85,9 +91,9 @@ body[data-state="failure"] main{
   height: 50px;
   line-height: 50px;
   vertical-align: middle;
-  text-align: center;
-  background-color: #647;
-  color: #DDD;
+  background-color: #0074D9;
+  text-indent: 3px;
+  color: #fff;
 
   /* @see http://matthewlein.com/ceaser/ */
   -webkit-transition-timing-function: cubic-bezier(0.925, 0.165, 0.260, 0.960);
@@ -102,51 +108,30 @@ body[data-state="failure"] main{
   font-family: monospace;
   font-size: 0.9em;
 }
-#editor, .CodeMirror{
+#editor,
+#level-selector,
+.CodeMirror{
   text-align: left;
 }
-#level-selector{
-  display : -webkit-flex;
-  display : flex;
-  -webkit-flex-direction: row;
-  flex-direction: row;
+
+.CodeMirror,
+.building {
+  box-shadow: 0 0 5px rgba(100, 100, 100, .3);
 }
-  #level-selector button,
-  #level-selector select {
-    background: limegreen;
-    border: none;
-    cursor: pointer;
-    -webkit-flex: 1 1;
-    flex: 1 1;
-    font-weight: bold;
-  }
-  #level-selector option,
-  #level-selector button{
-    padding: 15px;
-  }
 
-#logs {
-  background: rgba(255, 255, 255, .85);
-  border: 1px solid black;
-  border-top: none;
-  color: #000;
-  padding: 5px;
-  font-family: monospace;
-  text-align: left;
 
-  margin: 0;
-  overflow: scroll;
-
-  min-height: 200px;
-  max-height: 300px;
+#level-selector,
+.CodeMirror,
+.building {
+  margin: 15px;
 }
-  #logs p{
-    margin-top: 0;
-  }
-  #logs p:before{
-    content: "» ";
-  }
 
-.CodeMirror pre {
-  font-size: 0.9em;
+.CodeMirror {
+}
+
+footer {
+  background: rgba(0, 0, 0, .05);
+  margin-top: 1.5em;
+  padding: 10px;
+  text-align: center;
 }

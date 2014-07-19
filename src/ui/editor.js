@@ -1,7 +1,10 @@
 'use strict';
 
 var document = require('global/document');
-var CodeMirror = require('global/window').CodeMirror;
+var CodeMirror = require('codemirror');
+require('codemirror/mode/javascript/javascript');
+require('codemirror/addon/selection/active-line');
+require('codemirror/addon/edit/matchbrackets');
 
 //var code = document.getElementById('evaluated-scripts');
 //var currentVersion = parseInt(code.getAttribute('data-version'), 10);
@@ -14,9 +17,15 @@ var CodeMirror = require('global/window').CodeMirror;
 //  localStorage.codeVersion = currentVersion;
 //}
 
+function saveCodeState(){
+  console.log('Code state saved.')
+}
+
 module.exports = {
-  create: function createEditor(el){
-    var editor = CodeMirror.fromTextArea(el || document.getElementById('editor'), {
+  create: function createEditor(textarea){
+    textarea = textarea || document.getElementById('editor');
+
+    var editor = CodeMirror.fromTextArea(textarea, {
       mode: {
         name: "javascript",
         json: true
@@ -24,15 +33,19 @@ module.exports = {
       lineNumbers: true,
       autofocus: true,
       indentWithTabs: false,
+      styleActiveLine: true,
+      matchBrackets: true,
       tabSize: 2,
-      theme: "solarized dark",
+      theme: "neo",
       extraKeys : {
-        "Ctrl-S": document.getElementById('run-code').click,
-        "Cmd-S": document.getElementById('run-code').click
+        "Ctrl-S": saveCodeState,
+        "Cmd-S": saveCodeState
       }
     });
 
-    editor.setSize('100%', '450px');
+    editor.setSize('auto', '100%');
+
+    editor.getTextArea().addEventListener('change', saveCodeState);
 
     return editor;
   }
