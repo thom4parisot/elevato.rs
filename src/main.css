@@ -63,12 +63,11 @@ main {
 }
 
 .floor{
-  background: #2ECC40;
+  background: #DDDDDD;
   color: white;
   height: 50px;
   line-height: 50px;
   margin: 1px;
-  transition: background-color .5s ease-in;
   vertical-align: middle;
   width: 50px;
 }
@@ -78,6 +77,11 @@ main {
 .floor:before{
   content: attr(data-level);
   margin: 3px;
+}
+
+.floor,
+.elevator {
+  transition: background-color .3s ease-in;
 }
 
 .elevator{
@@ -90,7 +94,7 @@ main {
   height: 50px;
   line-height: 50px;
   vertical-align: middle;
-  background-color: #0074D9;
+  background-color: rgba(0, 116, 217, 0.33);
   text-indent: 3px;
   color: #fff;
 
@@ -107,6 +111,33 @@ main {
   font-family: monospace;
   font-size: 0.9em;
 }
+
+[data-elevators="1"] .building :nth-child(1) .floor,
+[data-elevators="2"] .building :nth-child(1) .floor,
+[data-elevators="3"] .building :nth-child(1) .floor,
+[data-elevators="4"] .building :nth-child(1) .floor,
+[data-elevators="2"] .building :nth-child(2) .floor,
+[data-elevators="3"] .building :nth-child(2) .floor,
+[data-elevators="4"] .building :nth-child(2) .floor,
+[data-elevators="3"] .building :nth-child(3) .floor,
+[data-elevators="4"] .building :nth-child(3) .floor,
+[data-elevators="4"] .building :nth-child(4) .floor {
+  background: #2ECC40;
+}
+
+[data-elevators="1"] .building :nth-child(1) .elevator,
+[data-elevators="2"] .building :nth-child(1) .elevator,
+[data-elevators="3"] .building :nth-child(1) .elevator,
+[data-elevators="4"] .building :nth-child(1) .elevator,
+[data-elevators="2"] .building :nth-child(2) .elevator,
+[data-elevators="3"] .building :nth-child(2) .elevator,
+[data-elevators="4"] .building :nth-child(2) .elevator,
+[data-elevators="3"] .building :nth-child(3) .elevator,
+[data-elevators="4"] .building :nth-child(3) .elevator,
+[data-elevators="4"] .building :nth-child(4) .elevator {
+  background: #0074D9;
+}
+
 #editor,
 #level-selector,
 .CodeMirror{
