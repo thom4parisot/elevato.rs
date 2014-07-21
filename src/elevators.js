@@ -50,11 +50,9 @@ module.exports = {
   updateStatus: function updateStatus(currentScenario){
     var bodyEl = document.querySelector('body');
 
-    if (!currentScenario){
-      return;
-    }
+    currentScenario = currentScenario || {};
 
-    bodyEl.setAttribute('data-floors', currentScenario.floors);
-    bodyEl.setAttribute('data-elevators', currentScenario.elevators);
+    bodyEl.setAttribute('data-floors', currentScenario.floors || 0);
+    bodyEl.setAttribute('data-elevators', currentScenario.elevators || 0);
   }
 };

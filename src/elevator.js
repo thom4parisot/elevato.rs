@@ -3,6 +3,10 @@
 var machina = require('machina');
 
 function animationEnd(e){
+  if (e.propertyName !== 'bottom') {
+    return;
+  }
+
   this.previousFloor = this.requestsStack.shift();
 
   this.transition('unloading');

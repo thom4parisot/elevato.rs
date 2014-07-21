@@ -85,18 +85,19 @@ main {
 }
 
 .elevator{
+  background-color: rgba(0, 116, 217, 0.33);
+  bottom: 0;
+  color: #fff;
+  height: 50px;
+  left: 0;
+  line-height: 50px;
   padding: 0;
   position: absolute;
-  bottom: 0;
-  left: 0;
   margin: 1px;
-  width: 50px;
-  height: 50px;
-  line-height: 50px;
-  vertical-align: middle;
-  background-color: rgba(0, 116, 217, 0.33);
   text-indent: 3px;
-  color: #fff;
+  transition-property: background-color, bottom;
+  vertical-align: middle;
+  width: 50px;
 
   /* @see http://matthewlein.com/ceaser/ */
   -webkit-transition-timing-function: cubic-bezier(0.925, 0.165, 0.260, 0.960);
