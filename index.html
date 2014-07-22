@@ -87,7 +87,7 @@
 
 <textarea id="editor" cols="30" rows="10">// called each time someone requests an elevator
 function onFloorRequest(floorNumber, elevators) {
-  elevators[0].goToFloor(floorNumber);
+  elevators[0].moveTo(floorNumber);
 }
 
 // called each time an elevator becomes idle

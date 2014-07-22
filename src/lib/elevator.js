@@ -121,7 +121,7 @@ module.exports = machina().Fsm.extend({
    * @param floor_number
    * @returns {Elevator}
    */
-  goToFloor: function(floor_number){
+  moveTo: function(floor_number){
     if (this.requestsStack.indexOf(floor_number) === -1){
       this.requestsStack.push(floor_number);
       this.handle('move');
