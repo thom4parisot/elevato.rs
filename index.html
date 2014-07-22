@@ -92,8 +92,8 @@ function onFloorRequest(floorNumber, elevators) {
 
 // called each time an elevator becomes idle
 function onElevatorIdle(elevator, elevators) {
-  if (elevator.requestsStack.length){
-    console.log('elevators['+elevator.id+'] still have to go to', elevator.requestsStack);
+  if (elevator.requestedAt.length){
+    console.log('elevators['+elevator.id+'] still have to go to', elevator.requestedAt);
   }
   else{
     console.log('elevators['+elevator.id+'] is now idle');

@@ -16,7 +16,7 @@ function queuedNotice(){
 }
 
 function resetElevatorObject(elevator){
-  elevator.requestsStack = [];
+  elevator.requestedAt = [];
 
   elevator.previousFloor = 1;
   elevator.goingToFloor = 1;
@@ -53,7 +53,7 @@ module.exports = machina().Fsm.extend({
      */
     'idle': {
       _onEnter: function(){
-        if (!this.requestsStack.length){
+        if (!this.requestedAt.length){
           this.emit('idle', this.goingToFloor, this);
         }
 
@@ -61,7 +61,7 @@ module.exports = machina().Fsm.extend({
       },
       'move': function(){
         this.transition('moving');
-        this.goingToFloor = this.requestsStack.shift();
+        this.goingToFloor = this.requestedAt.shift();
 
         console.log('#%s -> floor %s', this.id, this.goingToFloor);
         this.emit('moving', this);
@@ -93,7 +93,7 @@ module.exports = machina().Fsm.extend({
 
           console
 
-          if (self.requestsStack.length){
+          if (self.requestedAt.length){
             self.handle('move');
           }
         }, 1000);
@@ -122,8 +122,8 @@ module.exports = machina().Fsm.extend({
    * @returns {Elevator}
    */
   moveTo: function(floor_number){
-    if (this.requestsStack.indexOf(floor_number) === -1){
-      this.requestsStack.push(floor_number);
+    if (this.requestedAt.indexOf(floor_number) === -1){
+      this.requestedAt.push(floor_number);
       this.handle('move');
     }
 
