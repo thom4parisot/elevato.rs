@@ -72,7 +72,7 @@ main {
   width: 50px;
 }
 .floor[data-state="waiting"]{
-  background-color: #FF851B;
+  background-color: #FF851B !important;
 }
 .floor:before{
   content: attr(data-level);

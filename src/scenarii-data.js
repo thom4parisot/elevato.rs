@@ -17,118 +17,111 @@ module.exports = [
   {
     elevators: 1,
     floors: 2,
-    run: function(requestFloor){
-      setTimeout(function(){ requestFloor(2); }, 0);
-    }
+    sequences: [
+      [2, 0]
+    ]
   },
 
   {
     elevators: 1,
     floors: 3,
-    run: function(requestFloor){
-      // 2 persons asking almost at the same time
-      setTimeout(function(){ requestFloor(2); }, 0);
-      setTimeout(function(){ requestFloor(3); }, 10);
-
-      // one more request
-      setTimeout(function(){ requestFloor(1); }, 1500);
-    }
+    sequences: [
+      [2, 0],
+      [3, 10],
+      [1, 1500]
+    ]
   },
 
   {
     elevators: 2,
     floors: 5,
-    run: function(requestFloor){
-      // 2 persons asking almost at the same time
-      setTimeout(function(){ requestFloor(3); }, 0);
-      setTimeout(function(){ requestFloor(5); }, 100);
-
-      setTimeout(function(){ requestFloor(1); }, 1500);
-      setTimeout(function(){ requestFloor(2); }, 1600);
-    }
+    sequences: [
+      [3, 0],
+      [5, 100],
+      [1, 1500],
+      [2, 1600]
+    ]
   },
 
   // Challenges
   {
     elevators: 2,
     floors: 7,
-    run: function(requestFloor){
-      // 2 persons asking almost at the same time
-      setTimeout(function(){ requestFloor(2); }, 0);
-      setTimeout(function(){ requestFloor(3); }, 500);
-      setTimeout(function(){ requestFloor(4); }, 1000);
-      setTimeout(function(){ requestFloor(5); }, 1500);
-      setTimeout(function(){ requestFloor(6); }, 2000);
-      setTimeout(function(){ requestFloor(7); }, 2500);
-      setTimeout(function(){ requestFloor(1); }, 3000);
+    sequences: [
+      [2, 0],
+      [3, 500],
+      [4, 1000],
+      [5, 1500],
+      [6, 2000],
+      [7, 2500],
+      [1, 3000],
 
-      setTimeout(function(){ requestFloor(3); }, 3500);
-      setTimeout(function(){ requestFloor(4); }, 3500);
+      [3, 3500],
+      [4, 3500],
 
-      setTimeout(function(){ requestFloor(5); }, 4000);
-      setTimeout(function(){ requestFloor(1); }, 4500);
-      setTimeout(function(){ requestFloor(3); }, 5000);
-      setTimeout(function(){ requestFloor(2); }, 5500);
-    }
+      [5, 4000],
+      [1, 4500],
+      [3, 5000],
+      [2, 5500]
+    ]
   },
 
   {
     elevators: 3,
     floors: 7,
-    run: function(requestFloor){
-      // 2 persons asking almost at the same time
-      setTimeout(function(){ requestFloor(2); }, 0);
-      setTimeout(function(){ requestFloor(3); }, 500);
-      setTimeout(function(){ requestFloor(4); }, 1000);
-      setTimeout(function(){ requestFloor(5); }, 1500);
-      setTimeout(function(){ requestFloor(6); }, 2000);
-      setTimeout(function(){ requestFloor(7); }, 2500);
-      setTimeout(function(){ requestFloor(1); }, 2500);
+    sequences: [
+      [2, 0],
+      [3, 500],
+      [4, 1000],
+      [5, 1500],
+      [6, 2000],
+      [7, 2500],
+      [1, 2500],
 
-      setTimeout(function(){ requestFloor(3); }, 3500);
-      setTimeout(function(){ requestFloor(4); }, 3500);
+      // 2 persons asking almost at the same time
+      [3, 3500],
+      [4, 3500],
 
       // insisting on 2 for whatever reason from now on
-      setTimeout(function(){ requestFloor(2); }, 4000);
+      [2, 4000],
 
-      setTimeout(function(){ requestFloor(5); }, 4100);
-      setTimeout(function(){ requestFloor(6); }, 4200);
-      setTimeout(function(){ requestFloor(7); }, 4300);
-      setTimeout(function(){ requestFloor(1); }, 4400);
+      [5, 4100],
+      [6, 4200],
+      [7, 4300],
+      [1, 4400],
 
-      setTimeout(function(){ requestFloor(2); }, 5000);
+      [2, 5000],
 
-      setTimeout(function(){ requestFloor(7); }, 5600);
-      setTimeout(function(){ requestFloor(6); }, 5700);
-      setTimeout(function(){ requestFloor(5); }, 5800);
-      setTimeout(function(){ requestFloor(1); }, 5900);
+      [7, 5600],
+      [6, 5700],
+      [5, 5800],
+      [1, 5900],
 
-      setTimeout(function(){ requestFloor(2); }, 6000);
+      [2, 7000],
+      [2, 8000],
+      [2, 9000],
 
-      setTimeout(function(){ requestFloor(2); }, 7000);
-      setTimeout(function(){ requestFloor(2); }, 8000);
-      setTimeout(function(){ requestFloor(2); }, 9000);
+      [3, 9500],
+      [1, 9500],
+      [4, 9700],
 
-      setTimeout(function(){ requestFloor(3); }, 9500);
-      setTimeout(function(){ requestFloor(1); }, 9500);
-      setTimeout(function(){ requestFloor(4); }, 9700);
+      [2, 10000],
 
-      setTimeout(function(){ requestFloor(2); }, 10000);
-
-      setTimeout(function(){ requestFloor(7); }, 11500);
-      setTimeout(function(){ requestFloor(6); }, 13000);
-      setTimeout(function(){ requestFloor(5); }, 14500);
-      setTimeout(function(){ requestFloor(4); }, 16000);
-      setTimeout(function(){ requestFloor(3); }, 17500);
-      setTimeout(function(){ requestFloor(2); }, 19000);
-      setTimeout(function(){ requestFloor(1); }, 20000);
-    }
+      [7, 11500],
+      [6, 13000],
+      [5, 14500],
+      [4, 16000],
+      [3, 17500],
+      [2, 19000],
+      [1, 20000]
+    ]
   },
 
   {
     elevators: 3,
     floors: 10,
-    run: function(requestFloor){
+    sequences: (function(){
+      var s = [];
 
       function randFloor(){
         return Math.floor(10*Math.random()) + 1;
@@ -136,72 +129,74 @@ module.exports = [
 
       var nextFloorRequestTime = 0;
 
-      while(nextFloorRequestTime < 20*1000){
-        setTimeout(function(){ requestFloor(randFloor()); }, nextFloorRequestTime);
-        nextFloorRequestTime += 800*Math.random()+100;
+      while(nextFloorRequestTime < 20 * 1000){
+        s.push([randFloor(), nextFloorRequestTime]);
+        nextFloorRequestTime += 800 * Math.random() + 100;
       }
-    }
+
+      return s;
+    })()
   },
 
   {
     elevators: 4,
     floors: 10,
-    run: function(requestFloor){
-      setTimeout(function(){ requestFloor(2); }, 0);
-      setTimeout(function(){ requestFloor(3); }, 500);
-      setTimeout(function(){ requestFloor(4); }, 1000);
-      setTimeout(function(){ requestFloor(5); }, 1500);
-      setTimeout(function(){ requestFloor(6); }, 2000);
-      setTimeout(function(){ requestFloor(7); }, 2500);
-      setTimeout(function(){ requestFloor(8); }, 3000);
-      setTimeout(function(){ requestFloor(9); }, 3500);
-      setTimeout(function(){ requestFloor(10); }, 4000);
-      setTimeout(function(){ requestFloor(1); }, 4500);
+    sequences: [
+      [2, 0],
+      [3, 500],
+      [4, 1000],
+      [5, 1500],
+      [6, 2000],
+      [7, 2500],
+      [8, 3000],
+      [9, 3500],
+      [10, 4000],
+      [1, 4500],
 
-      setTimeout(function(){ requestFloor(2); }, 6000);
-      setTimeout(function(){ requestFloor(4); }, 6500);
-      setTimeout(function(){ requestFloor(6); }, 7000);
-      setTimeout(function(){ requestFloor(8); }, 7500);
-      setTimeout(function(){ requestFloor(9); }, 8000);
-      setTimeout(function(){ requestFloor(10); }, 8500);
+      [2, 6000],
+      [4, 6500],
+      [6, 7000],
+      [8, 7500],
+      [9, 8000],
+      [10, 8500],
 
-      setTimeout(function(){ requestFloor(3); }, 10000);
-      setTimeout(function(){ requestFloor(1); }, 10000);
-      setTimeout(function(){ requestFloor(4); }, 11000);
-      setTimeout(function(){ requestFloor(10); }, 11000);
+      [3, 10000],
+      [1, 10000],
+      [4, 11000],
+      [10, 11000],
 
-      setTimeout(function(){ requestFloor(3); }, 10000);
-      setTimeout(function(){ requestFloor(1); }, 10000);
-      setTimeout(function(){ requestFloor(7); }, 10000);
-      setTimeout(function(){ requestFloor(4); }, 11000);
-      setTimeout(function(){ requestFloor(10); }, 11000);
-      setTimeout(function(){ requestFloor(5); }, 11000);
+      [3, 10000],
+      [1, 10000],
+      [7, 10000],
+      [4, 11000],
+      [10, 11000],
+      [5, 11000],
 
-      setTimeout(function(){ requestFloor(2); }, 12000);
-      setTimeout(function(){ requestFloor(9); }, 12000);
-      setTimeout(function(){ requestFloor(6); }, 12000);
-      setTimeout(function(){ requestFloor(1); }, 13000);
-      setTimeout(function(){ requestFloor(3); }, 13000);
-      setTimeout(function(){ requestFloor(5); }, 13000);
+      [2, 12000],
+      [9, 12000],
+      [6, 12000],
+      [1, 13000],
+      [3, 13000],
+      [5, 13000],
 
-      setTimeout(function(){ requestFloor(3); }, 14000);
-      setTimeout(function(){ requestFloor(4); }, 14200);
-      setTimeout(function(){ requestFloor(5); }, 14400);
-      setTimeout(function(){ requestFloor(6); }, 14600);
-      setTimeout(function(){ requestFloor(7); }, 14800);
-      setTimeout(function(){ requestFloor(8); }, 15000);
+      [3, 14000],
+      [4, 14200],
+      [5, 14400],
+      [6, 14600],
+      [7, 14800],
+      [8, 15000],
 
-      setTimeout(function(){ requestFloor(10); }, 15500);
-      setTimeout(function(){ requestFloor(9); }, 16000);
-      setTimeout(function(){ requestFloor(8); }, 16500);
-      setTimeout(function(){ requestFloor(7); }, 17000);
-      setTimeout(function(){ requestFloor(6); }, 17500);
-      setTimeout(function(){ requestFloor(5); }, 18000);
-      setTimeout(function(){ requestFloor(4); }, 18500);
-      setTimeout(function(){ requestFloor(3); }, 19000);
-      setTimeout(function(){ requestFloor(2); }, 19500);
-      setTimeout(function(){ requestFloor(1); }, 20000);
-    }
+      [10, 15500],
+      [9, 16000],
+      [8, 16500],
+      [7, 17000],
+      [6, 17500],
+      [5, 18000],
+      [4, 18500],
+      [3, 19000],
+      [2, 19500],
+      [1, 20000]
+    ]
   }
 
 ];

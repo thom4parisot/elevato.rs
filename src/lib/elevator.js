@@ -15,6 +15,14 @@ function animationEnd(e){
 function queuedNotice(){
 }
 
+function resetElevatorObject(elevator){
+  elevator.requestsStack = [];
+
+  elevator.previousFloor = 1;
+  elevator.goingToFloor = 1;
+  elevator.el.setAttribute('data-at-floor', elevator.goingToFloor);
+}
+
 /**
  * The expected flow of things is
  * 1. idle
@@ -32,7 +40,7 @@ module.exports = machina().Fsm.extend({
   previousFloor: 1,
   initialize: function(){
     //we do it here otherwise the stack is shared among the various elevators (and we don't want it)
-    this.requestsStack = [];
+    resetElevatorObject(this);
 
     this.elementHeight = this.el.clientHeight;
 
@@ -90,6 +98,19 @@ module.exports = machina().Fsm.extend({
       },
       'move': queuedNotice
     }
+  },
+  reset: function resetElevator(){
+    var self = this;
+    resetElevatorObject(this);
+
+    this.el.style.transitionDuration = '0s';
+    this.el.style.bottom = 0;
+
+    this.transition('idle');
+
+    setTimeout(function(){
+      self.el.style.transitionDuration = '';
+    }, 0);
   },
   /**
    * Public API used to drag an elevator to a certain level

@@ -47,6 +47,15 @@ module.exports = {
 
     return elevators;
   },
+  reset: function resetElevators(elevators){
+    elevators.forEach(function(elevator){
+      elevator.reset();
+    });
+
+    for (var i = 1; i <= 10; i++){
+      setFloorState(i, '');
+    }
+  },
   updateStatus: function updateStatus(currentScenario){
     var bodyEl = document.querySelector('body');
 

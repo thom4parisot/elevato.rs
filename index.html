@@ -82,9 +82,10 @@
             </optgroup>
           </select>
           <button id="run-code">Run this scenario</button>
+          <button id="stop-code">Stop</button>
         </div>
 
-<textarea id="editor" cols="30" rows="10">// called each time a call for a floor is done is called at some floor
+<textarea id="editor" cols="30" rows="10">// called each time someone requests an elevator
 function onFloorRequest(floorNumber, elevators) {
   elevators[0].goToFloor(floorNumber);
 }
