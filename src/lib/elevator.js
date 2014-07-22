@@ -7,7 +7,7 @@ function animationEnd(e){
     return;
   }
 
-  this.previousFloor = this.requestsStack.shift();
+  this.previousFloor = this.goingToFloor;
 
   this.transition('unloading');
 }
@@ -59,10 +59,11 @@ module.exports = machina().Fsm.extend({
 
         this.goingToFloor = null;
       },
-      'move': function(floor_number){
+      'move': function(){
         this.transition('moving');
-        this.goingToFloor = floor_number;
+        this.goingToFloor = this.requestsStack.shift();
 
+        console.log('#%s -> floor %s', this.id, this.goingToFloor);
         this.emit('moving', this);
 
         // using this.goingToFloor because the event might change the direction
@@ -90,9 +91,10 @@ module.exports = machina().Fsm.extend({
           self.emit('unload', self.goingToFloor);
           self.transition('idle');
 
+          console
+
           if (self.requestsStack.length){
-            console.log('#%s -> floor %s', self.id, self.requestsStack[0]);
-            self.handle('move', self.requestsStack[0]);
+            self.handle('move');
           }
         }, 1000);
       },
@@ -120,12 +122,9 @@ module.exports = machina().Fsm.extend({
    * @returns {Elevator}
    */
   goToFloor: function(floor_number){
-    if (
-      this.requestsStack.indexOf(floor_number) === -1
-      && this.previousFloor !== floor_number
-    ){
+    if (this.requestsStack.indexOf(floor_number) === -1){
       this.requestsStack.push(floor_number);
-      this.handle('move', floor_number);
+      this.handle('move');
     }
 
     return this;
