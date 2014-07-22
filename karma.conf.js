@@ -15,8 +15,7 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'test/polyfills.js',
-      'test/unit/*.js',
-      { pattern: 'src/**/*.js', included: false, served: false }
+      'test/unit/*.js'
     ],
 
     preprocessors: {
