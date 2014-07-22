@@ -91,8 +91,6 @@ module.exports = machina().Fsm.extend({
           self.emit('unload', self.goingToFloor);
           self.transition('idle');
 
-          console
-
           if (self.requestedAt.length){
             self.handle('move');
           }
@@ -122,7 +120,10 @@ module.exports = machina().Fsm.extend({
    * @returns {Elevator}
    */
   moveTo: function(floor_number){
-    if (this.requestedAt.indexOf(floor_number) === -1){
+    if (
+      (this.requestedAt.indexOf(floor_number) === -1) &&
+      !(this.state === 'idle' && floor_number === this.previousFloor)
+    ){
       this.requestedAt.push(floor_number);
       this.handle('move');
     }
