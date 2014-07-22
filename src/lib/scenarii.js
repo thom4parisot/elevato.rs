@@ -17,6 +17,16 @@ module.exports = {
 
     return new Scenario(data[level]) || null;
   },
+  checkCompletion: function checkCompletion(scenario, allElevators){
+    var allIdle = allElevators.some(function(elevator){
+      return elevator.state === "idle";
+    });
+
+    if (allIdle){
+      document.body.setAttribute('data-state', document.querySelectorAll('.floor[data-state="waiting"]').length ? 'failure' : 'success');
+      console.log('Scenario completed in %s seconds.', (Date.now() - scenario._startTime - 1000) / 1000);
+    }
+  },
   /**
    *
    * @param scenario {Scenario}

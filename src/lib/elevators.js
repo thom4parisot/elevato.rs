@@ -27,7 +27,7 @@ module.exports = {
     setFloorState(floorNumber, 'waiting');
     window.onFloorRequest(floorNumber, elevators);
   },
-  create: function(){
+  create: function(onIdle){
     elevators = getElevators().map(function (el, id) {
       var e = new Elevator({
         el: el,
@@ -39,7 +39,10 @@ module.exports = {
       });
 
       e.on('idle', function (floorNumber, elevator) {
-        window.onElevatorIdle(elevator, elevators.slice(0, getElevatorCount()));
+        var els = elevators.slice(0, getElevatorCount());
+
+        window.onElevatorIdle(elevator, els);
+        onIdle(elevator, els);
       });
 
       return e;

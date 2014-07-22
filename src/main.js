@@ -3,10 +3,13 @@
 var window = require('global/document');
 var document = require('global/document');
 
+var activeScenario;
+
 var editor = require('./ui/editor').create();
 var scenarii = require('./lib/scenarii');
-var elevators = require('./lib/elevators').create();
-var activeScenario;
+var elevators = require('./lib/elevators').create(function(){
+  scenarii.checkCompletion(activeScenario, elevators);
+});
 
 var updateStatus = function updateStatus(){
   require('./lib/elevators').updateStatus(scenarii.getCurrent());
@@ -14,6 +17,7 @@ var updateStatus = function updateStatus(){
 
 var stopAll = function stopAll(){
   if (activeScenario) {
+    document.body.removeAttribute('data-state');
     activeScenario.stop();
     require('./lib/elevators').reset(elevators);
 
