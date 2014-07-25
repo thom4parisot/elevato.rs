@@ -22,7 +22,8 @@ module.exports = function(grunt){
           'src/**/*',
           '!src/**/*.js',
           'src/bundle.js',
-          'media/*'
+          'media/*',
+          'CNAME'
         ],
         options: {
           base: './',
