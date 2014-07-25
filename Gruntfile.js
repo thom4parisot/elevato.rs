@@ -6,7 +6,7 @@ module.exports = function(grunt){
     less: {
       main: {
         src: [
-          'bower_components/normalize-css/normalize.css',
+          'node_modules/normalize-css/normalize.css',
           'node_modules/codemirror/lib/codemirror.css',
           'node_modules/codemirror/theme/neo.css',
           'src/main.css'

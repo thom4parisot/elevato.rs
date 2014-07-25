@@ -39,6 +39,7 @@
     "browserify": "^4.2.1",
     "codemirror": "^4.3.0",
     "global": "^4.2.1",
-    "machina": "^0.3.7"
+    "machina": "^0.3.7",
+    "normalize-css": "^2.3.1"
   }
 }
