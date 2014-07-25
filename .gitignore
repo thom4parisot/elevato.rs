@@ -1,3 +1,2 @@
 .grunt
-dist
-src/bundle.js
+src/bundle.*

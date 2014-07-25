@@ -3,6 +3,18 @@
 module.exports = function(grunt){
   grunt.initConfig({
 
+    less: {
+      main: {
+        src: [
+          'bower_components/normalize-css/normalize.css',
+          'node_modules/codemirror/lib/codemirror.css',
+          'node_modules/codemirror/theme/neo.css',
+          'src/main.css'
+        ],
+        dest: 'src/bundle.css'
+      }
+    },
+
     'gh-pages': {
       github: {
         src: [
@@ -10,8 +22,7 @@ module.exports = function(grunt){
           'src/**/*',
           '!src/**/*.js',
           'src/bundle.js',
-          'media/*',
-          'bower_components/**/*.css'
+          'media/*'
         ],
         options: {
           base: './',
@@ -27,8 +38,9 @@ module.exports = function(grunt){
     }
   });
 
+  grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-gh-pages');
   grunt.loadNpmTasks('grunt-open');
 
-  grunt.registerTask('default', ['gh-pages', 'open']);
+  grunt.registerTask('default', ['less', 'gh-pages', 'open']);
 };
