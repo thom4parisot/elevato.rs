@@ -2,32 +2,30 @@
 
 module.exports = function(grunt){
   grunt.initConfig({
-    'copy': {
-      'static': {
+
+    less: {
+      main: {
         src: [
-          'index.html',
-          'src/**/*',
-          'media/*',
-          'bower_components/**/*.{css,js}'
+          'bower_components/normalize-css/normalize.css',
+          'node_modules/codemirror/lib/codemirror.css',
+          'node_modules/codemirror/theme/neo.css',
+          'src/main.css'
         ],
-        dest: 'dist/'
-      },
-      trick: {
-        expand: true,
-        flatten: true,
-        src: ['src/.gitignore', 'src/CNAME'],
-        dest: 'dist'
+        dest: 'src/bundle.css'
       }
     },
 
     'gh-pages': {
       github: {
         src: [
-          '**/*',
-          '.gitignore'
+          'index.html',
+          'src/**/*',
+          '!src/**/*.js',
+          'src/bundle.js',
+          'media/*'
         ],
         options: {
-          base: 'dist/',
+          base: './',
           repo: 'git@github.com:oncletom/elevato.rs.git'
         }
       }
@@ -40,9 +38,9 @@ module.exports = function(grunt){
     }
   });
 
-  grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-gh-pages');
   grunt.loadNpmTasks('grunt-open');
 
-  grunt.registerTask('default', ['copy', 'gh-pages', 'open']);
+  grunt.registerTask('default', ['less', 'gh-pages', 'open']);
 };

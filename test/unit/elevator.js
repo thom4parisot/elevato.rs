@@ -1,7 +1,9 @@
 'use strict';
 
+var Elevator = require('../../src/lib/elevator.js');
+
 describe('Elevator', function(){
-  describe('.goToFloor()', function(){
+  describe('.moveTo()', function(){
     var sandbox, handleSpy, elevator;
 
     beforeEach(function(){
@@ -23,24 +25,23 @@ describe('Elevator', function(){
     });
 
     it('should go from floor 1 to floor 2', function(){
-      elevator.goToFloor(2);
+      elevator.moveTo(2);
 
       expect(elevator.goingToFloor).to.eql(2);
-      expect(elevator.requestsStack).to.contain(2).and.to.be.length.of(1);
-      expect(handleSpy.called).to.be.true;
+      expect(elevator.requestedAt).to.be.empty;
+      expect(handleSpy).to.calledWith('move');
     });
 
     it('should not deal with a dupe request for a floor', function(){
-      elevator.goToFloor(2);
-      elevator.goToFloor(3);
-      elevator.goToFloor(2);
+      elevator.moveTo(2);
+      elevator.moveTo(3);
+      elevator.moveTo(2);
 
-      expect(elevator.goingToFloor).to.eql(2);
-      expect(elevator.requestsStack).to.eql([2, 3]);
+      expect(elevator.requestedAt).to.eql([3, 2]);
     });
 
     it('should not deal with a request targeting the same floor the elevator is at', function(){
-      elevator.goToFloor(1);
+      elevator.moveTo(1);
 
       expect(handleSpy.called).to.be.false;
     })

@@ -9,17 +9,19 @@ module.exports = function(config) {
 
 
     // frameworks to use
-    frameworks: ['mocha', 'chai', 'sinon'],
+    frameworks: ['mocha', 'sinon-chai', 'browserify'],
 
 
     // list of files / patterns to load in the browser
     files: [
       'test/polyfills.js',
-      'bower_components/lodash/dist/lodash.min.js',
-      'bower_components/machina/lib/machina.min.js',
-      'src/Elevator.js',
       'test/unit/*.js'
     ],
+
+    preprocessors: {
+      'src/**/*.js': ['browserify'],
+      'test/**/*.js': ['browserify']
+    },
 
 
     // list of files to exclude
