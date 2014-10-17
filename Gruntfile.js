@@ -32,6 +32,21 @@ module.exports = function(grunt){
       }
     },
 
+    appcache: {
+      core: {
+	dest: 'src/app.appcache',
+	cache: 'src/**/*.{css,js}'
+      },
+      dev: {
+	dest: 'src/app.appcache',
+	cache: '',
+	network: '*'
+      },
+      options: {
+	basePath: 'src/'
+      }
+    },
+
     open: {
       ghp: {
         path: 'http://elevato.rs'
@@ -40,8 +55,9 @@ module.exports = function(grunt){
   });
 
   grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.loadNpmTasks('grunt-appcache');
   grunt.loadNpmTasks('grunt-gh-pages');
   grunt.loadNpmTasks('grunt-open');
 
-  grunt.registerTask('default', ['less', 'gh-pages', 'open']);
+  grunt.registerTask('default', ['less', 'appcache:core', 'gh-pages', 'open']);
 };

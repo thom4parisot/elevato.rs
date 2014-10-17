@@ -1,2 +1,3 @@
 .grunt
 src/bundle.*
+src/*.appcache
