@@ -7,7 +7,7 @@ function animationEnd(e){
     return;
   }
 
-  this.previousFloor = this.goingToFloor;
+  this.previousFloor = this.nextFloor;
 
   this.transition('unloading');
 }
@@ -19,8 +19,8 @@ function resetElevatorObject(elevator){
   elevator.requestedAt = [];
 
   elevator.previousFloor = 1;
-  elevator.goingToFloor = 1;
-  elevator.el.setAttribute('data-at-floor', elevator.goingToFloor);
+  elevator.nextFloor = 1;
+  elevator.el.setAttribute('data-at-floor', elevator.nextFloor);
 }
 
 /**
@@ -36,7 +36,7 @@ module.exports = machina().Fsm.extend({
   initialState: "idle",
   el: null,
   elementHeight: 0,
-  goingToFloor: 1,
+  nextFloor: 1,
   previousFloor: 1,
   initialize: function(){
     //we do it here otherwise the stack is shared among the various elevators (and we don't want it)
@@ -54,24 +54,24 @@ module.exports = machina().Fsm.extend({
     'idle': {
       _onEnter: function(){
         if (!this.requestedAt.length){
-          this.emit('idle', this.goingToFloor, this);
+	  this.emit('idle', this.nextFloor, this);
         }
 
-        this.goingToFloor = null;
+	this.nextFloor = null;
       },
       'move': function(){
         this.transition('moving');
-        this.goingToFloor = this.requestedAt.shift();
+	this.nextFloor = this.requestedAt.shift();
 
-        console.log('#%s -> floor %s', this.id, this.goingToFloor);
+	console.log('#%s -> floor %s', this.id, this.nextFloor);
         this.emit('moving', this);
 
-        // using this.goingToFloor because the event might change the direction
-        var floorDiff = Math.abs(this.goingToFloor - this.previousFloor);
+	// using this.nextFloor because the event might change the direction
+	var floorDiff = Math.abs(this.nextFloor - this.previousFloor);
 
-        this.el.style.bottom = ((this.goingToFloor - 1) * (this.elementHeight + 1)) + 'px';
+	this.el.style.bottom = ((this.nextFloor - 1) * (this.elementHeight + 1)) + 'px';
         this.el.style.transitionDuration = (floorDiff - (0.1*floorDiff))+"s";
-        this.el.setAttribute('data-at-floor', this.goingToFloor);
+	this.el.setAttribute('data-at-floor', this.nextFloor);
       }
     },
     /**
@@ -88,7 +88,7 @@ module.exports = machina().Fsm.extend({
         var self = this;
 
         setTimeout(function(){
-          self.emit('unload', self.goingToFloor);
+	  self.emit('unload', self.nextFloor);
           self.transition('idle');
 
           if (self.requestedAt.length){
