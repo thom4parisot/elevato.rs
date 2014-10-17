@@ -78,11 +78,11 @@
               <option value="7">Four elevators, lots of requests</option>
             </optgroup>
           </select>
-          <button id="run-code">Run this scenario</button>
-          <button id="stop-code">Stop</button>
+	  <button id="run-code">▸ Run this scenario</button>
+	  <button id="stop-code">■ Stop</button>
         </div>
 
-<textarea id="editor" cols="30" rows="10">// called each time someone requests an elevator
+	<textarea id="editor" cols="30" rows="10">// called each time someone requests an elevator
 function onFloorRequest(floorNumber, elevators) {
   elevators[0].moveTo(floorNumber);
 }
@@ -96,6 +96,41 @@ function onElevatorIdle(elevator, elevators) {
     console.log('elevators['+elevator.id+'] is now idle');
   }
 }</textarea>
+
+	<div id="cheatsheet">
+	  <h2>Cheatsheet</h2>
+
+	  <dl class="tips-list">
+	    <dt class="tips-list__item">
+	      <code>floorNumber</code>
+	      <span class="tips-list__item--type">Number</span></dt>
+	    <dd>Étage demandé vers lequel on doit envoyer un ascenseur.</dd>
+	    <dt class="tips-list__item">
+	      <code>elevators</code>
+	      <span class="tips-list__item--type">Object[]</span></dt>
+	    <dd>Liste des ascenseurs disponibles. Le nombre varie en fonction des scénarios.</dd>
+	    <dt class="tips-list__item">
+	      <code>elevators[x]</code>
+	      <span class="tips-list__item--type">Object</span></dt>
+	    <dd>Objet représentant un ascenseur.</dd>
+	    <dt class="tips-list__item">
+	      <code>elevators[x].moveTo</code>
+	      <span class="tips-list__item--type">Function</span></dt>
+	    <dd>Demande à l'ascenseur de se rendre à l'étage spécifié.</dd>
+	    <dt class="tips-list__item">
+	      <code>elevators[x].nextFloor</code>
+	      <span class="tips-list__item--type">Number</span></dt>
+	    <dd>Étage vers lequel l'ascenseur se rend.</dd>
+	    <dt class="tips-list__item">
+	      <code>elevators[x].previousFloor</code>
+	      <span class="tips-list__item--type">Number</span></dt>
+	    <dd>Étage de provenance de l'ascenseur.</dd>
+	    <dt class="tips-list__item">
+	      <code>elevators[x].requestedAt</code>
+	      <span class="tips-list__item--type">Number[]</span></dt>
+	    <dd>Liste des étages que l'ascenseur doit servir.</dd>
+	  </dl>
+	</div>
       </div>
     </main>
 
