@@ -17,12 +17,12 @@ require('codemirror/addon/edit/matchbrackets');
 //  localStorage.codeVersion = currentVersion;
 //}
 
-function saveCodeState(){
-  console.log('Code state saved.')
+function saveCodeState(editor){
+  sessionStorage.codeDraft = editor.getValue();
 }
 
 module.exports = {
-  create: function createEditor(textarea){
+  create: function createEditor(textarea, defaultValue){
     textarea = textarea || document.getElementById('editor');
 
     var editor = CodeMirror.fromTextArea(textarea, {
@@ -45,7 +45,11 @@ module.exports = {
 
     editor.setSize('auto', '100%');
 
-    editor.getTextArea().addEventListener('change', saveCodeState);
+    if (defaultValue || ''){
+      editor.setValue(defaultValue);
+    }
+
+    editor.on('change', saveCodeState);
 
     return editor;
   }

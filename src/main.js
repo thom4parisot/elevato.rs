@@ -5,7 +5,7 @@ var document = require('global/document');
 
 var activeScenario;
 
-var editor = require('./ui/editor').create();
+var editor = require('./ui/editor').create(null, localStorage.codeContent);
 var scenarii = require('./lib/scenarii');
 var elevators = require('./lib/elevators').create(function(){
   scenarii.checkCompletion(activeScenario, elevators);
@@ -36,6 +36,8 @@ document.getElementById('run-code').addEventListener('click', function(){
   activeScenario = null;
 
   editor.save();
+
+  localStorage.codeContent = editor.getValue();
 
   if (currentScenario){
     activeScenario = scenarii.runScenario(currentScenario, elevators);
