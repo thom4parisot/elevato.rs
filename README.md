@@ -1,4 +1,4 @@
-# See You Later Elevator [![Build Status](https://travis-ci.org/oncletom/elevato.rs.png?branch=master)](https://travis-ci.org/oncletom/elevato.rs)
+# See You Later Elevator [![Build Status](https://travis-ci.org/oncletom/elevato.rs.svg?branch=master)](https://travis-ci.org/oncletom/elevato.rs)
 
 **See You Later Elevator** is a simple tool to question yourself about *programming* and *what is the mindset of programming*.
 
