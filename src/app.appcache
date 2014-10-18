@@ -1,16 +1,8 @@
 CACHE MANIFEST
-# rev 6 - 2014-10-18T13:19:25.711Z
+# rev 7 - 2014-10-18T13:21:00.636Z
 
 CACHE:
 bundle.css
 bundle.js
-lib/elevator.js
-lib/elevators.js
-lib/scenarii.js
-lib/scenario.js
-main.css
-main.js
-scenarii-data.js
-ui/editor.js
 /
 index.html
