@@ -1,8 +1,11 @@
 CACHE MANIFEST
-# rev 7 - 2014-10-18T13:21:00.636Z
+# rev 13 - 2014-10-18T13:27:14.302Z
 
 CACHE:
 bundle.css
 bundle.js
+../media/demo.gif
+../media/state-failure.gif
+../media/state-success.gif
 /
-index.html
+/index.html
