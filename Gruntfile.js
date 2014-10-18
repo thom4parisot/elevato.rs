@@ -36,7 +36,7 @@ module.exports = function(grunt){
       core: {
         dest: 'src/app.appcache',
         cache: {
-          patterns: 'src/**/*.{css,js}',
+          patterns: 'src/bundle.{css,js}',
           literals: [
             '/',
             'index.html'
