@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# rev 5 - 2014-10-18T13:08:11.861Z
+# rev 6 - 2014-10-18T13:19:25.711Z
 
 CACHE:
 bundle.css
@@ -12,3 +12,5 @@ main.css
 main.js
 scenarii-data.js
 ui/editor.js
+/
+index.html
