@@ -41,6 +41,11 @@ main {
   padding: 0;
 }
 
+h1, h2 {
+  font-family: Helvetica, sans-serif;
+  font-weight: 100;
+}
+
 .column {
   display: inline-block;
   text-align: center;
@@ -172,6 +177,28 @@ main {
 
 .CodeMirror {
 }
+
+#cheatsheet {
+  text-align: left;
+}
+
+  #cheatsheet .tips-list {
+    list-style: none;
+  }
+
+  #cheatsheet .tips-list dd {
+    border-left: 2px solid #ccc;
+    margin: .25em 0 .5em;
+    padding: .5em;
+  }
+
+  #cheatsheet .tips-list .tips-list__item code {
+    display: inline-block;
+    margin-right: 1em;
+  }
+  #cheatsheet .tips-list .tips-list__item .tips-list__item--type {
+    color: #bbb;
+  }
 
 footer {
   background: #e9e9e9;

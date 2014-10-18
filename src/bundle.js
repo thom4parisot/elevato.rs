@@ -1,6 +1,6 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/Users/thomaspa/Projects/elevato.rs/node_modules/browserify/node_modules/browser-resolve/empty.js":[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 
-},{}],"/Users/thomaspa/Projects/elevato.rs/node_modules/codemirror/addon/edit/matchbrackets.js":[function(require,module,exports){
+},{}],2:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -122,7 +122,7 @@
   });
 });
 
-},{"../../lib/codemirror":"/Users/thomaspa/Projects/elevato.rs/node_modules/codemirror/lib/codemirror.js"}],"/Users/thomaspa/Projects/elevato.rs/node_modules/codemirror/addon/selection/active-line.js":[function(require,module,exports){
+},{"../../lib/codemirror":4}],3:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -195,7 +195,7 @@
   }
 });
 
-},{"../../lib/codemirror":"/Users/thomaspa/Projects/elevato.rs/node_modules/codemirror/lib/codemirror.js"}],"/Users/thomaspa/Projects/elevato.rs/node_modules/codemirror/lib/codemirror.js":[function(require,module,exports){
+},{"../../lib/codemirror":4}],4:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -860,6 +860,7 @@
   function updateDisplaySimple(cm, viewport) {
     var update = new DisplayUpdate(cm, viewport);
     if (updateDisplayIfNeeded(cm, update)) {
+      updateHeightsInViewport(cm);
       postUpdateDisplay(cm, update);
       var barMeasure = measureForScrollbars(cm);
       updateSelection(cm);
@@ -1478,14 +1479,17 @@
     return result;
   }
 
-  function updateSelection(cm, drawn) {
-    if (!drawn) drawn = drawSelection(cm);
+  function showSelection(cm, drawn) {
     removeChildrenAndAdd(cm.display.cursorDiv, drawn.cursors);
     removeChildrenAndAdd(cm.display.selectionDiv, drawn.selection);
     if (drawn.teTop != null) {
       cm.display.inputDiv.style.top = drawn.teTop + "px";
       cm.display.inputDiv.style.left = drawn.teLeft + "px";
     }
+  }
+
+  function updateSelection(cm) {
+    showSelection(cm, drawSelection(cm));
   }
 
   // Draws a cursor for the given range
@@ -1840,19 +1844,26 @@
 
     var rect;
     if (node.nodeType == 3) { // If it is a text node, use a range to retrieve the coordinates.
-      while (start && isExtendingChar(prepared.line.text.charAt(mStart + start))) --start;
-      while (mStart + end < mEnd && isExtendingChar(prepared.line.text.charAt(mStart + end))) ++end;
-      if (ie && ie_version < 9 && start == 0 && end == mEnd - mStart) {
-        rect = node.parentNode.getBoundingClientRect();
-      } else if (ie && cm.options.lineWrapping) {
-        var rects = range(node, start, end).getClientRects();
-        if (rects.length)
-          rect = rects[bias == "right" ? rects.length - 1 : 0];
-        else
-          rect = nullRect;
-      } else {
-        rect = range(node, start, end).getBoundingClientRect() || nullRect;
+      for (var i = 0; i < 4; i++) { // Retry a maximum of 4 times when nonsense rectangles are returned
+        while (start && isExtendingChar(prepared.line.text.charAt(mStart + start))) --start;
+        while (mStart + end < mEnd && isExtendingChar(prepared.line.text.charAt(mStart + end))) ++end;
+        if (ie && ie_version < 9 && start == 0 && end == mEnd - mStart) {
+          rect = node.parentNode.getBoundingClientRect();
+        } else if (ie && cm.options.lineWrapping) {
+          var rects = range(node, start, end).getClientRects();
+          if (rects.length)
+            rect = rects[bias == "right" ? rects.length - 1 : 0];
+          else
+            rect = nullRect;
+        } else {
+          rect = range(node, start, end).getBoundingClientRect() || nullRect;
+        }
+        if (rect.left || rect.right || start == 0) break;
+        end = start;
+        start = start - 1;
+        collapse = "right";
       }
+      if (ie && ie_version < 11) rect = maybeUpdateRectForZooming(cm.display.measure, rect);
     } else { // If it is a widget, simply get the box for the whole widget.
       if (start > 0) collapse = bias = "right";
       var rects;
@@ -1868,8 +1879,6 @@
       else
         rect = nullRect;
     }
-
-    if (ie && ie_version < 11) rect = maybeUpdateRectForZooming(cm.display.measure, rect);
 
     var rtop = rect.top - prepared.rect.top, rbot = rect.bottom - prepared.rect.top;
     var mid = (rtop + rbot) / 2;
@@ -2227,16 +2236,17 @@
     var cm = op.cm, display = cm.display;
     if (op.updatedDisplay) updateHeightsInViewport(cm);
 
+    op.barMeasure = measureForScrollbars(cm);
+
     // If the max line changed since it was last measured, measure it,
     // and ensure the document's width matches it.
-    // updateDisplayIfNeeded will use these properties to do the actual resizing
+    // updateDisplay_W2 will use these properties to do the actual resizing
     if (display.maxLineChanged && !cm.options.lineWrapping) {
-      op.adjustWidthTo = measureChar(cm, display.maxLine, display.maxLine.text.length).left;
+      op.adjustWidthTo = measureChar(cm, display.maxLine, display.maxLine.text.length).left + 3;
       op.maxScrollLeft = Math.max(0, display.sizer.offsetLeft + op.adjustWidthTo +
                                   scrollerCutOff - display.scroller.clientWidth);
     }
 
-    op.barMeasure = measureForScrollbars(cm);
     if (op.updatedDisplay || op.selectionChanged)
       op.newSelectionNodes = drawSelection(cm);
   }
@@ -2248,10 +2258,11 @@
       cm.display.sizer.style.minWidth = op.adjustWidthTo + "px";
       if (op.maxScrollLeft < cm.doc.scrollLeft)
         setScrollLeft(cm, Math.min(cm.display.scroller.scrollLeft, op.maxScrollLeft), true);
+      cm.display.maxLineChanged = false;
     }
 
     if (op.newSelectionNodes)
-      updateSelection(cm, op.newSelectionNodes);
+      showSelection(cm, op.newSelectionNodes);
     if (op.updatedDisplay)
       setDocumentHeight(cm, op.barMeasure);
     if (op.updatedDisplay || op.startHeight != cm.doc.height)
@@ -2266,6 +2277,9 @@
   function endOperation_finish(op) {
     var cm = op.cm, display = cm.display, doc = cm.doc;
 
+    if (op.adjustWidthTo != null && Math.abs(op.barMeasure.scrollWidth - cm.display.scroller.scrollWidth) > 1)
+      updateScrollbars(cm);
+
     if (op.updatedDisplay) postUpdateDisplay(cm, op.update);
 
     // Abort mouse wheel delta measurement, when scrolling explicitly
@@ -2273,11 +2287,11 @@
       display.wheelStartX = display.wheelStartY = null;
 
     // Propagate the scroll position to the actual DOM scroller
-    if (op.scrollTop != null && display.scroller.scrollTop != op.scrollTop) {
+    if (op.scrollTop != null && (display.scroller.scrollTop != op.scrollTop || op.forceScroll)) {
       var top = Math.max(0, Math.min(display.scroller.scrollHeight - display.scroller.clientHeight, op.scrollTop));
       display.scroller.scrollTop = display.scrollbarV.scrollTop = doc.scrollTop = top;
     }
-    if (op.scrollLeft != null && display.scroller.scrollLeft != op.scrollLeft) {
+    if (op.scrollLeft != null && (display.scroller.scrollLeft != op.scrollLeft || op.forceScroll)) {
       var left = Math.max(0, Math.min(display.scroller.scrollWidth - display.scroller.clientWidth, op.scrollLeft));
       display.scroller.scrollLeft = display.scrollbarH.scrollLeft = doc.scrollLeft = left;
       alignHorizontally(cm);
@@ -2640,16 +2654,16 @@
           cm.options.smartIndent && range.head.ch < 100 &&
           (!i || doc.sel.ranges[i - 1].head.line != range.head.line)) {
         var mode = cm.getModeAt(range.head);
+        var end = changeEnd(changeEvent);
         if (mode.electricChars) {
           for (var j = 0; j < mode.electricChars.length; j++)
             if (inserted.indexOf(mode.electricChars.charAt(j)) > -1) {
-              indentLine(cm, range.head.line, "smart");
+              indentLine(cm, end.line, "smart");
               break;
             }
         } else if (mode.electricInput) {
-          var end = changeEnd(changeEvent);
           if (mode.electricInput.test(getLine(doc, end.line).text.slice(0, end.ch)))
-            indentLine(cm, range.head.line, "smart");
+            indentLine(cm, end.line, "smart");
         }
       }
     }
@@ -2711,7 +2725,7 @@
         var pos = posFromMouse(cm, e);
         if (!pos || clickInGutter(cm, e) || eventInWidget(cm.display, e)) return;
         e_preventDefault(e);
-        var word = findWordAt(cm, pos);
+        var word = cm.findWordAt(pos);
         extendSelection(cm.doc, word.anchor, word.head);
       }));
     else
@@ -2990,7 +3004,7 @@
       start = posFromMouse(cm, e, true, true);
       ourIndex = -1;
     } else if (type == "double") {
-      var word = findWordAt(cm, start);
+      var word = cm.findWordAt(start);
       if (cm.display.shift || doc.extend)
         ourRange = extendRange(doc, ourRange, word.anchor, word.head);
       else
@@ -3044,7 +3058,7 @@
         var anchor = oldRange.anchor, head = pos;
         if (type != "single") {
           if (type == "double")
-            var range = findWordAt(cm, pos);
+            var range = cm.findWordAt(pos);
           else
             var range = new Range(Pos(pos.line, 0), clipPos(doc, Pos(pos.line + 1, 0)));
           if (cmp(range.anchor, anchor) > 0) {
@@ -3751,7 +3765,7 @@
 
       var after = i ? computeSelAfterChange(doc, change) : lst(source);
       makeChangeSingleDoc(doc, change, after, mergeOldSpans(doc, change));
-      if (!i && doc.cm) doc.cm.scrollIntoView(change);
+      if (!i && doc.cm) doc.cm.scrollIntoView({from: change.from, to: changeEnd(change)});
       var rebased = [];
 
       // Propagate to the linked documents
@@ -3940,6 +3954,7 @@
     if (y1 < 0) y1 = 0;
     var screentop = cm.curOp && cm.curOp.scrollTop != null ? cm.curOp.scrollTop : display.scroller.scrollTop;
     var screen = display.scroller.clientHeight - scrollerCutOff, result = {};
+    if (y2 - y1 > screen) y2 = y1 + screen;
     var docBottom = cm.doc.height + paddingVert(display);
     var atTop = y1 < snapMargin, atBottom = y2 > docBottom - snapMargin;
     if (y1 < screentop) {
@@ -3950,16 +3965,16 @@
     }
 
     var screenleft = cm.curOp && cm.curOp.scrollLeft != null ? cm.curOp.scrollLeft : display.scroller.scrollLeft;
-    var screenw = display.scroller.clientWidth - scrollerCutOff;
-    x1 += display.gutters.offsetWidth; x2 += display.gutters.offsetWidth;
-    var gutterw = display.gutters.offsetWidth;
-    var atLeft = x1 < gutterw + 10;
-    if (x1 < screenleft + gutterw || atLeft) {
-      if (atLeft) x1 = 0;
-      result.scrollLeft = Math.max(0, x1 - 10 - gutterw);
-    } else if (x2 > screenw + screenleft - 3) {
-      result.scrollLeft = x2 + 10 - screenw;
-    }
+    var screenw = display.scroller.clientWidth - scrollerCutOff - display.gutters.offsetWidth;
+    var tooWide = x2 - x1 > screenw;
+    if (tooWide) x2 = y1 + screen;
+    if (x1 < 10)
+      result.scrollLeft = 0;
+    else if (x1 < screenleft)
+      result.scrollLeft = Math.max(0, x1 - (tooWide ? 0 : 10));
+    else if (x2 > screenw + screenleft - 3)
+      result.scrollLeft = x2 + (tooWide ? 0 : 10) - screenw;
+
     return result;
   }
 
@@ -4181,24 +4196,6 @@
     return target;
   }
 
-  // Find the word at the given position (as returned by coordsChar).
-  function findWordAt(cm, pos) {
-    var doc = cm.doc, line = getLine(doc, pos.line).text;
-    var start = pos.ch, end = pos.ch;
-    if (line) {
-      var helper = cm.getHelper(pos, "wordChars");
-      if ((pos.xRel < 0 || end == line.length) && start) --start; else ++end;
-      var startChar = line.charAt(start);
-      var check = isWordChar(startChar, helper)
-        ? function(ch) { return isWordChar(ch, helper); }
-        : /\s/.test(startChar) ? function(ch) {return /\s/.test(ch);}
-        : function(ch) {return !/\s/.test(ch) && !isWordChar(ch);};
-      while (start > 0 && check(line.charAt(start - 1))) --start;
-      while (end < line.length && check(line.charAt(end))) ++end;
-    }
-    return new Range(Pos(pos.line, start), Pos(pos.line, end));
-  }
-
   // EDITOR METHODS
 
   // The publicly visible API. Note that methodOp(f) means
@@ -4268,11 +4265,14 @@
       for (var i = 0; i < ranges.length; i++) {
         var range = ranges[i];
         if (!range.empty()) {
-          var start = Math.max(end, range.from().line);
-          var to = range.to();
+          var from = range.from(), to = range.to();
+          var start = Math.max(end, from.line);
           end = Math.min(this.lastLine(), to.line - (to.ch ? 0 : 1)) + 1;
           for (var j = start; j < end; ++j)
             indentLine(this, j, how);
+          var newRanges = this.doc.sel.ranges;
+          if (from.ch == 0 && ranges.length == newRanges.length && newRanges[i].from().ch > 0)
+            replaceOneSelection(this.doc, i, new Range(from, newRanges[i].to()), sel_dontScroll);
         } else if (range.head.line > end) {
           indentLine(this, range.head.line, how, true);
           end = range.head.line;
@@ -4537,6 +4537,24 @@
         doc.sel.ranges[i].goalColumn = goals[i];
     }),
 
+    // Find the word at the given position (as returned by coordsChar).
+    findWordAt: function(pos) {
+      var doc = this.doc, line = getLine(doc, pos.line).text;
+      var start = pos.ch, end = pos.ch;
+      if (line) {
+        var helper = this.getHelper(pos, "wordChars");
+        if ((pos.xRel < 0 || end == line.length) && start) --start; else ++end;
+        var startChar = line.charAt(start);
+        var check = isWordChar(startChar, helper)
+          ? function(ch) { return isWordChar(ch, helper); }
+          : /\s/.test(startChar) ? function(ch) {return /\s/.test(ch);}
+          : function(ch) {return !/\s/.test(ch) && !isWordChar(ch);};
+        while (start > 0 && check(line.charAt(start - 1))) --start;
+        while (end < line.length && check(line.charAt(end))) ++end;
+      }
+      return new Range(Pos(pos.line, start), Pos(pos.line, end));
+    },
+
     toggleOverwrite: function(value) {
       if (value != null && value == this.state.overwrite) return;
       if (this.state.overwrite = !this.state.overwrite)
@@ -4623,6 +4641,7 @@
       clearCaches(this);
       resetInput(this);
       this.scrollTo(doc.scrollLeft, doc.scrollTop);
+      this.curOp.forceScroll = true;
       signalLater(this, "swapDoc", this, old);
       return old;
     }),
@@ -4668,7 +4687,7 @@
     clearCaches(cm);
     regChange(cm);
   }, true);
-  option("specialChars", /[\t\u0000-\u0019\u00ad\u200b\u2028\u2029\ufeff]/g, function(cm, val) {
+  option("specialChars", /[\t\u0000-\u0019\u00ad\u200b-\u200f\u2028\u2029\ufeff]/g, function(cm, val) {
     cm.options.specialChars = new RegExp(val.source + (val.test("\t") ? "" : "|\t"), "g");
     cm.refresh();
   }, true);
@@ -4929,15 +4948,7 @@
     },
     goLineStartSmart: function(cm) {
       cm.extendSelectionsBy(function(range) {
-        var start = lineStart(cm, range.head.line);
-        var line = cm.getLineHandle(start.line);
-        var order = getOrder(line);
-        if (!order || order[0].level == 0) {
-          var firstNonWS = Math.max(0, line.text.search(/\S/));
-          var inWS = range.head.line == start.line && range.head.ch <= firstNonWS && range.head.ch;
-          return Pos(start.line, inWS ? 0 : firstNonWS);
-        }
-        return start;
+        return lineStartSmart(cm, range.head);
       }, {origin: "+move", bias: 1});
     },
     goLineEnd: function(cm) {
@@ -4954,6 +4965,14 @@
       cm.extendSelectionsBy(function(range) {
         var top = cm.charCoords(range.head, "div").top + 5;
         return cm.coordsChar({left: 0, top: top}, "div");
+      }, sel_move);
+    },
+    goLineLeftSmart: function(cm) {
+      cm.extendSelectionsBy(function(range) {
+        var top = cm.charCoords(range.head, "div").top + 5;
+        var pos = cm.coordsChar({left: 0, top: top}, "div");
+        if (pos.ch < cm.getLine(pos.line).search(/\S/)) return lineStartSmart(cm, range.head);
+        return pos;
       }, sel_move);
     },
     goLineUp: function(cm) {cm.moveV(-1, "line");},
@@ -6693,7 +6712,7 @@
     },
     changeGeneration: function(forceSplit) {
       if (forceSplit)
-        this.history.lastOp = this.history.lastOrigin = null;
+        this.history.lastOp = this.history.lastSelOp = this.history.lastOrigin = null;
       return this.history.generation;
     },
     isClean: function (gen) {
@@ -7010,7 +7029,7 @@
     // Used to track when changes can be merged into a single undo
     // event
     this.lastModTime = this.lastSelTime = 0;
-    this.lastOp = null;
+    this.lastOp = this.lastSelOp = null;
     this.lastOrigin = this.lastSelOrigin = null;
     // Used by the isClean() method
     this.generation = this.maxGeneration = startGen || 1;
@@ -7088,7 +7107,7 @@
     hist.done.push(selAfter);
     hist.generation = ++hist.maxGeneration;
     hist.lastModTime = hist.lastSelTime = time;
-    hist.lastOp = opId;
+    hist.lastOp = hist.lastSelOp = opId;
     hist.lastOrigin = hist.lastSelOrigin = change.origin;
 
     if (!last) signal(doc, "historyAdded");
@@ -7114,7 +7133,7 @@
     // the current, or the origins don't allow matching. Origins
     // starting with * are always merged, those starting with + are
     // merged when similar and close together in time.
-    if (opId == hist.lastOp ||
+    if (opId == hist.lastSelOp ||
         (origin && hist.lastSelOrigin == origin &&
          (hist.lastModTime == hist.lastSelTime && hist.lastOrigin == origin ||
           selectionEventCanBeMerged(doc, origin, lst(hist.done), sel))))
@@ -7124,7 +7143,7 @@
 
     hist.lastSelTime = +new Date;
     hist.lastSelOrigin = origin;
-    hist.lastOp = opId;
+    hist.lastSelOp = opId;
     if (options && options.clearRedo !== false)
       clearSelectionEvents(hist.undone);
   }
@@ -7474,7 +7493,7 @@
     return function(){return f.apply(null, args);};
   }
 
-  var nonASCIISingleCaseWordChar = /[\u00df\u3040-\u309f\u30a0-\u30ff\u3400-\u4db5\u4e00-\u9fcc\uac00-\ud7af]/;
+  var nonASCIISingleCaseWordChar = /[\u00df\u0590-\u05f4\u0600-\u06ff\u3040-\u309f\u30a0-\u30ff\u3400-\u4db5\u4e00-\u9fcc\uac00-\ud7af]/;
   var isWordCharBasic = CodeMirror.isWordChar = function(ch) {
     return /\w/.test(ch) || ch > "\x80" &&
       (ch.toUpperCase() != ch.toLowerCase() || nonASCIISingleCaseWordChar.test(ch));
@@ -7641,7 +7660,7 @@
     if (badBidiRects != null) return badBidiRects;
     var txt = removeChildrenAndAdd(measure, document.createTextNode("A\u062eA"));
     var r0 = range(txt, 0, 1).getBoundingClientRect();
-    if (r0.left == r0.right) return false;
+    if (!r0 || r0.left == r0.right) return false; // Safari returns null in some cases (#2780)
     var r1 = range(txt, 1, 2).getBoundingClientRect();
     return badBidiRects = (r1.right - r0.right < 3);
   }
@@ -7753,6 +7772,17 @@
     var order = getOrder(line);
     var ch = !order ? line.text.length : order[0].level % 2 ? lineLeft(line) : lineRight(line);
     return Pos(lineN == null ? lineNo(line) : lineN, ch);
+  }
+  function lineStartSmart(cm, pos) {
+    var start = lineStart(cm, pos.line);
+    var line = getLine(cm.doc, start.line);
+    var order = getOrder(line);
+    if (!order || order[0].level == 0) {
+      var firstNonWS = Math.max(0, line.text.search(/\S/));
+      var inWS = pos.line == start.line && pos.ch <= firstNonWS && pos.ch;
+      return Pos(start.line, inWS ? 0 : firstNonWS);
+    }
+    return start;
   }
 
   function compareBidiLevel(order, a, b) {
@@ -7993,12 +8023,12 @@
 
   // THE END
 
-  CodeMirror.version = "4.4.0";
+  CodeMirror.version = "4.6.0";
 
   return CodeMirror;
 });
 
-},{}],"/Users/thomaspa/Projects/elevato.rs/node_modules/codemirror/mode/javascript/javascript.js":[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -8020,6 +8050,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
   var jsonldMode = parserConfig.jsonld;
   var jsonMode = parserConfig.json || jsonldMode;
   var isTS = parserConfig.typescript;
+  var wordRE = parserConfig.wordCharacters || /[\w$]/;
 
   // Tokenizer
 
@@ -8133,8 +8164,8 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
     } else if (isOperatorChar.test(ch)) {
       stream.eatWhile(isOperatorChar);
       return ret("operator", "operator", stream.current());
-    } else {
-      stream.eatWhile(/[\w\$_]/);
+    } else if (wordRE.test(ch)) {
+      stream.eatWhile(wordRE);
       var word = stream.current(), known = keywords.propertyIsEnumerable(word) && keywords[word];
       return (known && state.lastType != ".") ? ret(known.type, known.style, word) :
                      ret("variable", "variable", word);
@@ -8203,7 +8234,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
         if (--depth == 0) break;
       } else if (bracket >= 3 && bracket < 6) {
         ++depth;
-      } else if (/[$\w]/.test(ch)) {
+      } else if (wordRE.test(ch)) {
         sawSomething = true;
       } else if (sawSomething && !depth) {
         ++pos;
@@ -8391,7 +8422,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
   function maybeoperatorNoComma(type, value, noComma) {
     var me = noComma == false ? maybeoperatorComma : maybeoperatorNoComma;
     var expr = noComma == false ? expression : expressionNoComma;
-    if (value == "=>") return cont(pushcontext, noComma ? arrowBodyNoComma : arrowBody, popcontext);
+    if (type == "=>") return cont(pushcontext, noComma ? arrowBodyNoComma : arrowBody, popcontext);
     if (type == "operator") {
       if (/\+\+|--/.test(value)) return cont(me);
       if (value == "?") return cont(expression, expect(":"), expr);
@@ -8417,13 +8448,11 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
   }
   function arrowBody(type) {
     findFatArrow(cx.stream, cx.state);
-    if (type == "{") return pass(statement);
-    return pass(expression);
+    return pass(type == "{" ? statement : expression);
   }
   function arrowBodyNoComma(type) {
     findFatArrow(cx.stream, cx.state);
-    if (type == "{") return pass(statement);
-    return pass(expressionNoComma);
+    return pass(type == "{" ? statement : expressionNoComma);
   }
   function maybelabel(type) {
     if (type == ":") return cont(poplex, statement);
@@ -8670,7 +8699,7 @@ CodeMirror.defineMode("javascript", function(config, parserConfig) {
   };
 });
 
-CodeMirror.registerHelper("wordChars", "javascript", /[\\w$]/);
+CodeMirror.registerHelper("wordChars", "javascript", /[\w$]/);
 
 CodeMirror.defineMIME("text/javascript", "javascript");
 CodeMirror.defineMIME("text/ecmascript", "javascript");
@@ -8685,10 +8714,10 @@ CodeMirror.defineMIME("application/typescript", { name: "javascript", typescript
 
 });
 
-},{"../../lib/codemirror":"/Users/thomaspa/Projects/elevato.rs/node_modules/codemirror/lib/codemirror.js"}],"/Users/thomaspa/Projects/elevato.rs/node_modules/global/console.js":[function(require,module,exports){
+},{"../../lib/codemirror":4}],6:[function(require,module,exports){
 module.exports = console;
 
-},{}],"/Users/thomaspa/Projects/elevato.rs/node_modules/global/document.js":[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 (function (global){
 var topLevel = typeof global !== 'undefined' ? global :
     typeof window !== 'undefined' ? window : {}
@@ -8707,22 +8736,24 @@ if (typeof document !== 'undefined') {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"min-document":"/Users/thomaspa/Projects/elevato.rs/node_modules/browserify/node_modules/browser-resolve/empty.js"}],"/Users/thomaspa/Projects/elevato.rs/node_modules/global/window.js":[function(require,module,exports){
+},{"min-document":1}],8:[function(require,module,exports){
 (function (global){
 if (typeof window !== "undefined") {
     module.exports = window;
 } else if (typeof global !== "undefined") {
     module.exports = global;
+} else if (typeof self !== "undefined"){
+    module.exports = self;
 } else {
     module.exports = {};
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],"/Users/thomaspa/Projects/elevato.rs/node_modules/machina/lib/machina.js":[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 /**
  * machina - A library for creating powerful and flexible finite state machines.  Loosely inspired by Erlang/OTP's gen_fsm behavior.
  * Author: Jim Cowart (http://freshbrewedcode.com/jimcowart)
- * Version: v0.3.7
+ * Version: v0.3.8
  * Url: http://machina-js.org/
  * License(s): MIT, GPL
  */
@@ -9019,28 +9050,34 @@ if (typeof window !== "undefined") {
 
     Fsm.prototype.trigger = Fsm.prototype.emit;
 
-
+    // _machKeys are members we want to track across the prototype chain of an extended FSM constructor
+    // Since we want to eventually merge the aggregate of those values onto the instance so that FSMs
+    // that share the same extended prototype won't share state *on* those prototypes.
     var _machKeys = ["states", "initialState"];
     var inherits = function (parent, protoProps, staticProps) {
-        var fsm;
-        var machObj = {};
-        var ctor = function () {};
-
+        var fsm; // placeholder for instance constructor
+        var machObj = {}; // object used to hold initialState & states from prototype for instance-level merging
+        var ctor = function () {}; // placeholder ctor function used to insert level in prototype chain
         // The constructor function for the new subclass is either defined by you
         // (the "constructor" property in your `extend` definition), or defaulted
         // by us to simply call the parent's constructor.
         if (protoProps && protoProps.hasOwnProperty('constructor')) {
             fsm = protoProps.constructor;
         } else {
+            // The default machina constructor (when using inheritance) creates a
+            // deep copy of the states/initialState values from the prototype and
+            // extends them over the instance so that they'll be instance-level.
+            // If an options arg (args[0]) is passed in, a states or intialState
+            // value will be preferred over any data pulled up from the prototype.
             fsm = function () {
                 var args = slice.call(arguments, 0);
-                var blendedState;
                 args[0] = args[0] || {};
-                blendedState = (args[0].states) ? _.deepExtend(_.cloneDeep(machObj), {
-                    states: args[0].states || {},
-                    initialState: args[0].initialState
-                }) : _.cloneDeep(machObj);
-                blendedState.initialState = args[0].initialState || blendedState.initialState;
+                var blendedState;
+                var instanceStates = args[0].states || {};
+                blendedState = _.deepExtend(_.cloneDeep(machObj), {
+                    states: instanceStates
+                });
+                blendedState.initialState = args[0].initialState || this.initialState;
                 _.extend(args[0], blendedState);
                 parent.apply(this, args);
             };
@@ -9118,7 +9155,7 @@ if (typeof window !== "undefined") {
     machina.emit = machina.trigger;
     return machina;
 }));
-},{"lodash":"/Users/thomaspa/Projects/elevato.rs/node_modules/machina/node_modules/lodash/dist/lodash.js"}],"/Users/thomaspa/Projects/elevato.rs/node_modules/machina/node_modules/lodash/dist/lodash.js":[function(require,module,exports){
+},{"lodash":10}],10:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -15907,7 +15944,7 @@ if (typeof window !== "undefined") {
 }.call(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],"/Users/thomaspa/Projects/elevato.rs/src/lib/elevator.js":[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 "use strict";
 
 var machina = require('machina');
@@ -15917,7 +15954,7 @@ function animationEnd(e){
     return;
   }
 
-  this.previousFloor = this.goingToFloor;
+  this.previousFloor = this.nextFloor;
 
   this.transition('unloading');
 }
@@ -15929,8 +15966,8 @@ function resetElevatorObject(elevator){
   elevator.requestedAt = [];
 
   elevator.previousFloor = 1;
-  elevator.goingToFloor = 1;
-  elevator.el.setAttribute('data-at-floor', elevator.goingToFloor);
+  elevator.nextFloor = 1;
+  elevator.el.setAttribute('data-at-floor', elevator.nextFloor);
 }
 
 /**
@@ -15946,7 +15983,7 @@ module.exports = machina().Fsm.extend({
   initialState: "idle",
   el: null,
   elementHeight: 0,
-  goingToFloor: 1,
+  nextFloor: 1,
   previousFloor: 1,
   initialize: function(){
     //we do it here otherwise the stack is shared among the various elevators (and we don't want it)
@@ -15964,24 +16001,24 @@ module.exports = machina().Fsm.extend({
     'idle': {
       _onEnter: function(){
         if (!this.requestedAt.length){
-          this.emit('idle', this.goingToFloor, this);
+	  this.emit('idle', this.nextFloor, this);
         }
 
-        this.goingToFloor = null;
+	this.nextFloor = null;
       },
       'move': function(){
         this.transition('moving');
-        this.goingToFloor = this.requestedAt.shift();
+	this.nextFloor = this.requestedAt.shift();
 
-        console.log('#%s -> floor %s', this.id, this.goingToFloor);
+	console.log('#%s -> floor %s', this.id, this.nextFloor);
         this.emit('moving', this);
 
-        // using this.goingToFloor because the event might change the direction
-        var floorDiff = Math.abs(this.goingToFloor - this.previousFloor);
+	// using this.nextFloor because the event might change the direction
+	var floorDiff = Math.abs(this.nextFloor - this.previousFloor);
 
-        this.el.style.bottom = ((this.goingToFloor - 1) * (this.elementHeight + 1)) + 'px';
+	this.el.style.bottom = ((this.nextFloor - 1) * (this.elementHeight + 1)) + 'px';
         this.el.style.transitionDuration = (floorDiff - (0.1*floorDiff))+"s";
-        this.el.setAttribute('data-at-floor', this.goingToFloor);
+	this.el.setAttribute('data-at-floor', this.nextFloor);
       }
     },
     /**
@@ -15998,7 +16035,7 @@ module.exports = machina().Fsm.extend({
         var self = this;
 
         setTimeout(function(){
-          self.emit('unload', self.goingToFloor);
+	  self.emit('unload', self.nextFloor);
           self.transition('idle');
 
           if (self.requestedAt.length){
@@ -16042,7 +16079,7 @@ module.exports = machina().Fsm.extend({
   }
 });
 
-},{"machina":"/Users/thomaspa/Projects/elevato.rs/node_modules/machina/lib/machina.js"}],"/Users/thomaspa/Projects/elevato.rs/src/lib/elevators.js":[function(require,module,exports){
+},{"machina":9}],12:[function(require,module,exports){
 "use strict";
 
 var window = require('global/window');
@@ -16113,7 +16150,7 @@ module.exports = {
     bodyEl.setAttribute('data-elevators', currentScenario.elevators || 0);
   }
 };
-},{"./elevator":"/Users/thomaspa/Projects/elevato.rs/src/lib/elevator.js","global/console":"/Users/thomaspa/Projects/elevato.rs/node_modules/global/console.js","global/document":"/Users/thomaspa/Projects/elevato.rs/node_modules/global/document.js","global/window":"/Users/thomaspa/Projects/elevato.rs/node_modules/global/window.js"}],"/Users/thomaspa/Projects/elevato.rs/src/lib/scenarii.js":[function(require,module,exports){
+},{"./elevator":11,"global/console":6,"global/document":7,"global/window":8}],13:[function(require,module,exports){
 'use strict';
 
 var window = require('global/window');
@@ -16172,7 +16209,7 @@ module.exports = {
 
 
 
-},{"./../scenarii-data":"/Users/thomaspa/Projects/elevato.rs/src/scenarii-data.js","./elevators":"/Users/thomaspa/Projects/elevato.rs/src/lib/elevators.js","./scenario":"/Users/thomaspa/Projects/elevato.rs/src/lib/scenario.js","global/document":"/Users/thomaspa/Projects/elevato.rs/node_modules/global/document.js","global/window":"/Users/thomaspa/Projects/elevato.rs/node_modules/global/window.js"}],"/Users/thomaspa/Projects/elevato.rs/src/lib/scenario.js":[function(require,module,exports){
+},{"./../scenarii-data":16,"./elevators":12,"./scenario":14,"global/document":7,"global/window":8}],14:[function(require,module,exports){
 'use strict';
 
 function Scenario(data){
@@ -16226,7 +16263,7 @@ Scenario.prototype = {
 };
 
 module.exports = Scenario;
-},{}],"/Users/thomaspa/Projects/elevato.rs/src/main.js":[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 'use strict';
 
 var window = require('global/document');
@@ -16234,7 +16271,7 @@ var document = require('global/document');
 
 var activeScenario;
 
-var editor = require('./ui/editor').create();
+var editor = require('./ui/editor').create(null, localStorage.codeContent);
 var scenarii = require('./lib/scenarii');
 var elevators = require('./lib/elevators').create(function(){
   scenarii.checkCompletion(activeScenario, elevators);
@@ -16266,12 +16303,14 @@ document.getElementById('run-code').addEventListener('click', function(){
 
   editor.save();
 
+  localStorage.codeContent = editor.getValue();
+
   if (currentScenario){
     activeScenario = scenarii.runScenario(currentScenario, elevators);
   }
 });
 
-},{"./lib/elevators":"/Users/thomaspa/Projects/elevato.rs/src/lib/elevators.js","./lib/scenarii":"/Users/thomaspa/Projects/elevato.rs/src/lib/scenarii.js","./ui/editor":"/Users/thomaspa/Projects/elevato.rs/src/ui/editor.js","global/document":"/Users/thomaspa/Projects/elevato.rs/node_modules/global/document.js"}],"/Users/thomaspa/Projects/elevato.rs/src/scenarii-data.js":[function(require,module,exports){
+},{"./lib/elevators":12,"./lib/scenarii":13,"./ui/editor":17,"global/document":7}],16:[function(require,module,exports){
 'use strict';
 
 /*
@@ -16474,7 +16513,7 @@ module.exports = [
   }
 
 ];
-},{}],"/Users/thomaspa/Projects/elevato.rs/src/ui/editor.js":[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 'use strict';
 
 var document = require('global/document');
@@ -16494,12 +16533,12 @@ require('codemirror/addon/edit/matchbrackets');
 //  localStorage.codeVersion = currentVersion;
 //}
 
-function saveCodeState(){
-  console.log('Code state saved.')
+function saveCodeState(editor){
+  sessionStorage.codeDraft = editor.getValue();
 }
 
 module.exports = {
-  create: function createEditor(textarea){
+  create: function createEditor(textarea, defaultValue){
     textarea = textarea || document.getElementById('editor');
 
     var editor = CodeMirror.fromTextArea(textarea, {
@@ -16522,9 +16561,13 @@ module.exports = {
 
     editor.setSize('auto', '100%');
 
-    editor.getTextArea().addEventListener('change', saveCodeState);
+    if (defaultValue || ''){
+      editor.setValue(defaultValue);
+    }
+
+    editor.on('change', saveCodeState);
 
     return editor;
   }
 };
-},{"codemirror":"/Users/thomaspa/Projects/elevato.rs/node_modules/codemirror/lib/codemirror.js","codemirror/addon/edit/matchbrackets":"/Users/thomaspa/Projects/elevato.rs/node_modules/codemirror/addon/edit/matchbrackets.js","codemirror/addon/selection/active-line":"/Users/thomaspa/Projects/elevato.rs/node_modules/codemirror/addon/selection/active-line.js","codemirror/mode/javascript/javascript":"/Users/thomaspa/Projects/elevato.rs/node_modules/codemirror/mode/javascript/javascript.js","global/document":"/Users/thomaspa/Projects/elevato.rs/node_modules/global/document.js"}]},{},["/Users/thomaspa/Projects/elevato.rs/src/main.js"]);
+},{"codemirror":4,"codemirror/addon/edit/matchbrackets":2,"codemirror/addon/selection/active-line":3,"codemirror/mode/javascript/javascript":5,"global/document":7}]},{},[15]);
