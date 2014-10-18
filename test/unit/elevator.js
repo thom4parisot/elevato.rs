@@ -18,7 +18,7 @@ describe('Elevator', function(){
     });
 
     it('should have some default values', function(){
-      expect(elevator.goingToFloor).to.eql(null);
+      expect(elevator.nextFloor).to.eql(null);
       expect(elevator.previousFloor).to.eql(1);
       expect(elevator.requestStack).to.be.empty;
       expect(handleSpy.called).to.be.false;
@@ -27,7 +27,7 @@ describe('Elevator', function(){
     it('should go from floor 1 to floor 2', function(){
       elevator.moveTo(2);
 
-      expect(elevator.goingToFloor).to.eql(2);
+      expect(elevator.nextFloor).to.eql(2);
       expect(elevator.requestedAt).to.be.empty;
       expect(handleSpy).to.calledWith('move');
     });

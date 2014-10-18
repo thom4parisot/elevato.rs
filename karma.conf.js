@@ -9,7 +9,7 @@ module.exports = function(config) {
 
 
     // frameworks to use
-    frameworks: ['mocha', 'sinon-chai', 'browserify'],
+    frameworks: ['browserify', 'mocha', 'sinon-chai'],
 
 
     // list of files / patterns to load in the browser
@@ -23,6 +23,9 @@ module.exports = function(config) {
       'test/**/*.js': ['browserify']
     },
 
+    browserify: {
+      debug: true
+    },
 
     // list of files to exclude
     exclude: [
