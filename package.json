@@ -5,6 +5,7 @@
   "description": "SeeYouLaterElevator",
   "main": "./src/main.js",
   "scripts": {
+    "deploy": "npm run build && grunt deploy",
     "test": "./node_modules/karma/bin/karma start --single-run --browser PhantomJS",
     "test-watch": "karma start",
     "build": "browserify src/main.js -o src/bundle.js",

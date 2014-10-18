@@ -59,5 +59,7 @@ module.exports = function(grunt){
   grunt.loadNpmTasks('grunt-gh-pages');
   grunt.loadNpmTasks('grunt-open');
 
-  grunt.registerTask('default', ['less', 'appcache:core', 'gh-pages', 'open']);
+  grunt.registerTask('build', ['less', 'appcache:core']);
+  grunt.registerTask('deploy', ['build', 'gh-pages']);
+  grunt.registerTask('default', ['build', 'open']);
 };
