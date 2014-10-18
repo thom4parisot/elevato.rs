@@ -34,16 +34,22 @@ module.exports = function(grunt){
 
     appcache: {
       core: {
-	dest: 'src/app.appcache',
-	cache: 'src/**/*.{css,js}'
+        dest: 'src/app.appcache',
+        cache: {
+          patterns: 'src/**/*.{css,js}',
+          literals: [
+            '/',
+            'index.html'
+          ]
+        }
       },
       dev: {
-	dest: 'src/app.appcache',
-	cache: '',
-	network: '*'
+        dest: 'src/app.appcache',
+        cache: '',
+        network: '*'
       },
       options: {
-	basePath: 'src/'
+	      basePath: 'src/'
       }
     },
 
