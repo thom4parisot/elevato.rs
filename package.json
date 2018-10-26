@@ -41,7 +41,7 @@
   "dependencies": {
     "codemirror": "^4.3.0",
     "global": "^4.2.1",
-    "machina": "^0.3.7",
+    "machina": "^4.0.0",
     "normalize-css": "^2.3.1"
   }
 }
